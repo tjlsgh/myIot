@@ -95,11 +95,12 @@ function findDeviceById(id) {
   return newDeviceList;
 }
 function sendCommand(id, command) {
-  let divices = findDeviceById(id);
-  if (device.length === 0) {
+  let devices = findDeviceById(id);
+  if (devices.length === 0) {
     return;
   }
   if (command === "open") {
+    console.log("!!!!! open led" )
     deviceList.forEach((connection) => {
       connection.write("1", "ascii");
     });

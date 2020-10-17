@@ -94,3 +94,13 @@ function setOptions(time, value) {
   }
   myChart.setOption(echartOption);
 }
+
+// 处理按钮的请求事件
+$('#led-open').click(() => {
+  console.log("led click");
+  $.post('/led/' + deviceId, {action: 'open'});
+})
+$('#led-close').click(() => {
+  console.log("led click");
+  $.post('/led/' + deviceId, {action: 'close'});
+})

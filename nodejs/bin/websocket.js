@@ -29,7 +29,7 @@ function sendData(deviceId, data) {
     if (v.deviceId === deviceId) {
       if (v.ws.readyState === WebSocket.OPEN) {
         v.ws.send(msg);
-        console.log("!!!!!!" + msg);
+        // console.log("!!!!!!" + msg);
       } else {
         // 将不在连接状态的websocket删除
         return deleteWebsocket(v.ws);
