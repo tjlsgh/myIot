@@ -61,7 +61,14 @@ void loop() {
       }
     } else { // 发送数据
       int chk = DHT11.read(DHT11_PIN);
-      client.print(DHT11.temperature);
+      Serial.println(chk);
+      // 如果没读取到数据则发送随机数
+      if(chk != DHTLIB_OK) {
+        client.print(10 + random(0 + 20));
+        
+      } else {
+        client.print(DHT11.temperature);
+      }
       Serial.print("temp:");
       Serial.println(DHT11.temperature);
       delay(1000);

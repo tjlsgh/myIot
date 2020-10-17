@@ -2,8 +2,8 @@ extends layout
 
 block content
   script(src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts.min.js")
-  script(src="../routes/index.js")
-  h1.title(style='font-size:4em;margin-bottom:4vh;')= "MyIotSys"
+
+  h1.title(style='font-size:3em;margin-bottom:4vh;')= title
   .container-fluid
     .row
       .col-md-4.col-sm-6
@@ -14,10 +14,10 @@ block content
               p.title 灯一：
               p(style='color:white') 开启
             .text
-              p.title 灯一：
+              p.title 灯二：
               p(style='color:white') 开启
             .text
-              p.title 灯一：
+              p.title 灯三：
               p(style='color:white') 开启
       .col-md-4.col-sm-6
         .block
@@ -38,13 +38,13 @@ block content
           .content
             .text
               p.title 最低：
-              p(style='color:white') 22 ℃
+              p(style='color:white') 22 %rh
             .text
               p.title 最高：
-              p(style='color:white') 27 ℃
+              p(style='color:white') 27 %rh
             .text
               p.title 平均：
-              p(style='color:white') 25 ℃    
+              p(style='color:white') 25 %rh
       .col-md-4.col-sm-6
         .block
           img.block-img(src="/images/option.png", alt="")
@@ -58,8 +58,13 @@ block content
             .text
               p.title 门禁：
               button.btn.btn-success.btn-lg(type="button") 开启
-     .col.md-8.col-sm-12
-      div#main(style="width: 100%;height: 30vh;")
+      .col.md-8.col-sm-8
+        //- div#tempEchartBox(style="width: 100%;height: 267px;background-color: rgba(10, 69, 128, 0.3);")
+        div#tempEchartBox
+      script(src="/javascripts/index.js")
+      .col.md-8.col-sm-8
+        div#humiEchartBox
+    
 
 
  

@@ -31,7 +31,7 @@ MongoClient.connect(url, (err, mongoClient) => {
 // 插入数据
 mongodb.insert = function (data, callback) {
   if (mongodb.dbClient && mongodb.dbClient.isConnected()) {
-    data.createAt = new Data();
+    data.createAt = new Date();
     mongodb.db.collection("device-data").insertOne(data, (err, result) => {
       if (err) callback(err);
       callback(null, result);
