@@ -4,11 +4,12 @@ const mongodb = require("./mongodb.js");
 const websocket = require("./websocket");
 const deviceList = [];
 const PORT = "8266";
-const Timeout = 10 * 1000;
+const Timeout = 15 * 1000;
 
 var server = net.createServer((connection) => {
   console.log("client connected");
-  let address = connection.address().address + "  port:" + connection.remotePort;
+  let address =
+    connection.address().address + "  port:" + connection.remotePort;
   console.log("address: " + address);
   connection.on("data", (data) => {
     // 设备 ID
@@ -28,8 +29,8 @@ var server = net.createServer((connection) => {
         }
       );
       websocket.sendData(connection.id, connection.lastValue);
-      console.log("websocket sendData:" +connection.id+ " " + connection.lastValue)
     }
+
     let str = address + " receive: " + data.toString("ascii");
     connection.lastValue = data.toString("ascii");
     console.log(str);
@@ -100,7 +101,6 @@ function sendCommand(id, command) {
     return;
   }
   if (command === "open") {
-    console.log("!!!!! open led" )
     deviceList.forEach((connection) => {
       connection.write("1", "ascii");
     });

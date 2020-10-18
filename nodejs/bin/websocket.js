@@ -17,14 +17,25 @@ function deleteWebsocket(ws) {
     console.log("delete WebSocket:", ws.ip);
   }
 }
+// 类型: 0 设备数据 1 设备回复
 function sendData(deviceId, data) {
   let msg;
-  // 捕捉序列化时的异常
-  try {
-    msg = JSON.stringify([{ time: moment().format("mm:ss"), value: data }]);
-  } catch (error) {
-    return console.log("JSON.steringfy err:", err);
-  }
+  // 判断 返回
+  if (typeof data == "undefined") return;
+  // if (data == "OK") {
+  //   //return console.log("device receive message OK");
+  //   msg = [{ type: 1, deviceRes: OK }]; // 设备接收到消息
+  // } else {
+    // 捕捉序列化时的异常
+    try {
+      data = JSON.parse(data);
+      msg = JSON.stringify([
+        { time: moment().format("mm:ss"), value: data },
+      ]);
+    } catch (error) {
+      return console.log("JSON.stringfy err");
+    }
+  //}
   wsList.forEach((v) => {
     if (v.deviceId === deviceId) {
       if (v.ws.readyState === WebSocket.OPEN) {
