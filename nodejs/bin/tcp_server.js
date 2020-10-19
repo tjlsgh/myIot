@@ -1,8 +1,7 @@
 var net = require("net");
-//const { Socket } = require("dgram");
 const mongodb = require("./mongodb.js");
 const websocket = require("./websocket");
-const deviceList = [];
+const devicesList = require("./device.js").devicesList;
 const PORT = "8266";
 const Timeout = 15 * 1000;
 
@@ -11,13 +10,28 @@ var server = net.createServer((connection) => {
   let address =
     connection.address().address + "  port:" + connection.remotePort;
   console.log("address: " + address);
+
   connection.on("data", (data) => {
     // 设备 ID
     if (!connection.id) {
-      connection.id = data.toString("ascii");
+      try {
+        data = JSON.parse(data);
+      } catch (error) {
+        console.log("tcp data parse error");
+      }
+      connection.id = data.Id;
+      connection.devices = data.devices;
       connection.addr = address;
-      console.log("device id : " + connection.id);
+      console.log(
+        "deviceId: " +
+          connection.id +
+          " light1: " +
+          connection.devices.light1 +
+          " relay1: " +
+          connection.devices.relay1
+      );
       addDevice(connection);
+      websocket.sendData(connection.id, JSON.stringify(data));
       return;
     } else {
       mongodb.insert(
@@ -62,53 +76,47 @@ server.listen(PORT, () => {
 
 function addDevice(connection) {
   deleteDevice(connection);
-  deviceList.push(connection);
+  devicesList.push(connection);
 }
 function deleteDevice(connection) {
   if (connection.id && connection.addr) {
     let cIndex = null;
-    deviceList.forEach((value, index) => {
+    devicesList.forEach((value, index) => {
       if (value.id === connection.id && value.addr === connection.addr) {
         cIndex = index;
       }
     });
     if (cIndex != null) {
-      deviceList.splice(cIndex, 1);
+      devicesList.splice(cIndex, 1);
     }
   }
 }
 function findDevice(connection) {
-  let newDeviceList = [];
-  deviceList.forEach((element) => {
+  let newDevicesList = [];
+  devicesList.forEach((element) => {
     if (element.id === connection.id && element.addr === connection.addr) {
-      newDeviceList.push(element);
+      newDevicesList.push(element);
     }
   });
-  return newDeviceList;
+  return newDevicesList;
 }
 function findDeviceById(id) {
-  let newDeviceList = [];
-  deviceList.forEach((element) => {
+  let newDevicesList = [];
+  devicesList.forEach((element) => {
     if (element.id === id) {
-      newDeviceList.push(element);
+      newDevicesList.push(element);
     }
   });
-  return newDeviceList;
+  return newDevicesList;
 }
 function sendCommand(id, command) {
   let devices = findDeviceById(id);
   if (devices.length === 0) {
     return;
   }
-  if (command === "open") {
-    deviceList.forEach((connection) => {
-      connection.write("1", "ascii");
-    });
-  } else if (command === "close") {
-    deviceList.forEach((connection) => {
-      connection.write("0", "ascii");
-    });
-  }
+  devicesList.forEach((connection) => {
+    connection.write(command, "ascii");
+  });
 }
 
 module.exports = {

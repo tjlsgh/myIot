@@ -12,13 +12,19 @@ router.get('/', (req, res, next) => {
 router.get('/device/:id', (req, res, next) => {
   res.render('index', {title: 'MyIotSys ——' + '设备名称: ' + req.params.id});
 })
-
+// 根据设备id 获取历史数据
 router.get('/history/:id', (req, res, next) => {
-  res.send('not really');
+  res.send('not ready');
 })
-
+// 向设备发送命令
 router.post('/led/:id', (req, res, next) => {
   console.log('post /led/:id ', req.params.id, req.body);
+  tcpServer.sentCommand(req.params.id, req.body.action)
+  res.send({code: 0, msg: 'command send'})
+})
+// 查看设备状态
+router.post('/checkDevState/:id', (req, res, next) => {
+  console.log('post /checkDevState/:id ', req.params.id, req.body);
   tcpServer.sentCommand(req.params.id, req.body.action)
   res.send({code: 0, msg: 'command send'})
 })

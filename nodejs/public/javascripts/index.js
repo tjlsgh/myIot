@@ -1,16 +1,29 @@
-var tempchart, humiChart;
+var tempChart, humiChart;
 const host = window.location.host;
 let deviceId = window.location.pathname.split("/")[2] || "mydevice1";
-
+let devData = 0,
+  devState = 1;
+const reqCommand = {
+  closeLed: "0",
+  openLed: "1",
+  checkDevState: "2",
+};
 window.onload = function () {
   tempChart = echarts.init(document.getElementById("tempEchartBox"));
   humiChart = echarts.init(document.getElementById("humiEchartBox"));
   setOptions();
   console.log("my chart init");
-  ws();
+  init();
+  checkDevState();
 };
-
-function ws() {
+window.addEventListener("beforeunload", function (event) {
+  console.log("I am the 2nd one.");
+});
+window.addEventListener("unload", function (event) {
+  console.log("I am the 4th and last one…");
+  
+});
+function init() {
   let socket;
   if (!window.WebSocket) {
     window.WebSocket = window.MozWebSocket;
@@ -25,22 +38,11 @@ function ws() {
   function setSocketOption(socket) {
     socket.onmessage = function (msg) {
       console.log("websocket receive: " + msg.data);
-      // let data = JSON.parse(msg.data);
-      // console.log("websocket receive: " + data);
       try {
-        // let data = JSON.parse(msg.data);
-        // if (isDeviceRes) return;
-        // data.forEach((e) => {
-        //   setOptions(e.time, e.value.temp, tempChart, tempChartOption);
-        //   setOptions(e.time, e.value.humi, humiChart, humiChartOption);
-        // });
         dataHandle(msg);
       } catch (err) {
         console.log(err);
       }
-      // msg.data.forEach((element) => {
-      //   setOptions(element.time, element.value);
-      // });
     };
     socket.onopen = function (event) {
       console.log("websocket connected");
@@ -75,10 +77,11 @@ function setOptions(time, value, echart, echartOption) {
 function dataHandle(msg) {
   let data = JSON.parse(msg.data);
   data.forEach((e) => {
-    if (e.value.type === 0) {
+    if (e.value.type === devData) {
       drawChart(e);
-    } else if (e.value.type === 1) {
-      setState(e.value.device);
+    } else if (e.value.type === devState) {
+      console.log("stateHandle…………");
+      setState(e.value.devices);
     }
   });
 }
@@ -87,24 +90,49 @@ function drawChart(data) {
   setOptions(data.time, data.value.temp, tempChart, tempChartOption);
   setOptions(data.time, data.value.humi, humiChart, humiChartOption);
 }
-function setState(device) {
+// 设置设备状态
+function setState(devices) {
   // let eleClass = "." + device; // 元素 类名
   console.log("dev res");
-  for (let key in device) {
+  for (let key in devices) {
     if (key == "light1") {
-      if (device[key] == 1) $(".light1").text("开启");
-      else $(".light1").text("关闭");
+      setStateHelper(key, devices);
+      // if (devices[key] == 1) $(".light1").text("开启");
+      // else if(devices[key] == 0) $(".light1").text("关闭");
+      // else $(".light1").text("未知");
+    }
+    if (key == "relay1") {
+      setStateHelper(key, devices);
     }
   }
 }
+// 帮助判断
+function setStateHelper(key, devices) {
+  switch (devices[key]) {
+    case 0:
+      $("." + key).text("关闭");
+      break;
+    case 1:
+      $("." + key).text("开启");
+      break;
+    case 2:
+      $("." + key).text("未知");
+      break;
+  }
+}
+// 发送查看设备状态的命令
+function checkDevState() {
+  $.post("/checkDevState/" + deviceId, { action: reqCommand.checkDevState });
+  console.log("check device state");
+}
 // 处理按钮的请求事件
 $("#led-open").click(() => {
-  console.log("led click");
-  $.post("/led/" + deviceId, { action: "open" });
+  $.post("/led/" + deviceId, { action: reqCommand.openLed });
+  console.log("led open");
 });
 $("#led-close").click(() => {
-  console.log("led click");
-  $.post("/led/" + deviceId, { action: "close" });
+  console.log("led close");
+  $.post("/led/" + deviceId, { action: reqCommand.closeLed });
 });
 
 var tempChartOption = {
