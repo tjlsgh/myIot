@@ -1,7 +1,7 @@
 var net = require("net");
 const mongodb = require("./mongodb.js");
 const websocket = require("./websocket");
-const devicesList = require("./device.js").devicesList;
+const devicesList = require("./common.js").devicesList;
 const PORT = "8266";
 const Timeout = 15 * 1000;
 

@@ -1,6 +1,6 @@
 const WebSocket = require("ws");
 const moment = require("moment");
-const devicesList = require("./device.js").devicesList;
+const devicesList = require("./common.js").devicesList;
 const wsList = []; // 保存已连接的 websocket
 
 function init(server) {
@@ -41,11 +41,7 @@ function sendData(deviceId, data) {
   let msg;
   // 判断 返回
   if (typeof data == "undefined") return;
-  // if (data == "OK") {
-  //   //return console.log("device receive message OK");
-  //   msg = [{ type: 1, deviceRes: OK }]; // 设备接收到消息
-  // } else {
-  // 捕捉序列化时的异常
+
   try {
     data = JSON.parse(data);
     msg = JSON.stringify([{ time: moment().format("mm:ss"), value: data }]);
