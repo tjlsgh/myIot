@@ -12,7 +12,7 @@ block content
           .content
             .text
               p.title 灯一：
-              p.light1(style='color:white') 开启
+              p.light1(style='color:white') 未知
             .text
               p.title 灯二：
               p(style='color:white') 未知
@@ -64,9 +64,11 @@ block content
       .col.md-8.col-sm-8
         //- div#tempEchartBox(style="width: 100%;height: 267px;background-color: rgba(10, 69, 128, 0.3);")
         div#tempEchartBox
-      script(src="/javascripts/index.js")
+      //- script(src="/javascripts/echartInit.js")
+      //- script(src="/javascripts/webSocketInit.js")
       .col.md-8.col-sm-8
         div#humiEchartBox
+      script(src="/javascripts/myIndex.js")
     
 
 

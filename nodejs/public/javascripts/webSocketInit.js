@@ -1,4 +1,4 @@
-function webSocketInit(host, msgHandle) {
+function init(host, msgHandle, deviceId) {
   let socket;
   if (!window.WebSocket) {
     window.WebSocket = window.MozWebSocket;
@@ -21,7 +21,7 @@ function webSocketInit(host, msgHandle) {
     };
     socket.onopen = function (event) {
       console.log("------ websocket connected");
-      let data = JSON.stringify({ deviceId: deviceId });
+      let data = JSON.stringify({ deviceId: deviceId});
       socket.send(data);
     };
     socket.onclose = function (event) {
@@ -35,5 +35,5 @@ function webSocketInit(host, msgHandle) {
 }
 
 module.exports = {
-  webSocketInit: webSocketInit,
+  init: init,
 };
