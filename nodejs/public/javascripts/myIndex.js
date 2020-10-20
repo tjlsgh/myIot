@@ -44,7 +44,20 @@ var tempChart, humiChart;
 const host = window.location.host;
 const deviceId = window.location.pathname.split("/")[2] || "mydevice1";
 let devData = 0,
-  devState = 1;
+  devState = 1; // 标识状态、数据
+let MinMaxAvgData = [];
+let dataEleClass = [
+  // 标记元素， 用于更改数据显示
+  "MinTemp",
+  "MaxTemp",
+  "AvgTemp",
+  "MinHumi",
+  "MaxHumi",
+  "AvgHumi",
+];
+let dataEleClass1 = {
+  // 标记元素， 用于更改数据显示
+};
 const reqCommand = {
   closeLed: "0",
   openLed: "1",
@@ -71,27 +84,61 @@ function msgHandle(msg) {
     if (e.value.type === devData) {
       MyEchart.drawChart(e, tempChart, tempChartOption, "temp");
       MyEchart.drawChart(e, humiChart, humiChartOption, "humi");
+      setMinMaxAvg(e.value);
     } else if (e.value.type === devState) {
       console.log("stateHandle......");
-      setState(e.value.devices);
+      setDevState(e.value.devices);
     }
   });
 }
 // 设置设备状态
-function setState(devices) {
+function setDevState(devices) {
   // let eleClass = "." + device; // 元素 类名
-  console.log("dev res");
+  console.log("------ set states");
   for (let key in devices) {
     if (key == "light1") {
-      setStateHelper(key, devices);
+      setDevStateHelper(key, devices);
     }
     if (key == "relay1") {
-      setStateHelper(key, devices);
+      setDevStateHelper(key, devices);
     }
   }
 }
+// 好蠢的写法呀 QAQ
+function setMinMaxAvg(value) {
+  if (MinMaxAvgData.length == 0) {
+    console.log("init minmaxavgdata");
+    for (let i = 0; i < 3; i++) MinMaxAvgData[i] = value.temp;
+    for (let i = 3; i < 6; i++) MinMaxAvgData[i] = value.humi;
+    for(let i = 0; i < 6; i++) {
+      $("." + dataEleClass[i]).text(MinMaxAvgData[i] + " ");
+    }
+  } else {
+    if (value.temp < MinMaxAvgData[0]) {
+      MinMaxAvgData[0] = value.temp;
+      $("." + dataEleClass[0]).text(MinMaxAvgData[0] + " ");
+    } else if (value.temp > MinMaxAvgData[1]) {
+      MinMaxAvgData[1] = value.temp;
+      $("." + dataEleClass[1]).text(MinMaxAvgData[1] + " ");
+      $("." + dataEleClass[2]).text(
+        (MinMaxAvgData[0] + MinMaxAvgData[1]) / 2 + " "
+      );
+    }
+    if (value.humi < MinMaxAvgData[3]) {
+      MinMaxAvgData[3] = value.humi;
+      $("." + dataEleClass[3]).text(MinMaxAvgData[3] + " ");
+    } else if (value.humi > MinMaxAvgData[4]) {
+      MinMaxAvgData[4] = value.humi;
+      $("." + dataEleClass[4]).text(MinMaxAvgData[4] + "");
+      $("." + dataEleClass[5]).text(
+        (MinMaxAvgData[3] + MinMaxAvgData[4]) / 2 + " "
+      );
+    }
+  }
+}
+
 // 帮助判断
-function setStateHelper(key, devices) {
+function setDevStateHelper(key, devices) {
   switch (devices[key]) {
     case 0:
       $("." + key).text("关闭");
