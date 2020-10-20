@@ -39,7 +39,7 @@ function init() {
     socket.onmessage = function (msg) {
       console.log("websocket receive: " + msg.data);
       try {
-        dataHandle(msg);
+        msgHandle(msg);
       } catch (err) {
         console.log(err);
       }
@@ -74,7 +74,7 @@ function setOptions(time, value, echart, echartOption) {
 }
 
 // 解析websocket收到的数据类型
-function dataHandle(msg) {
+function msgHandle(msg) {
   let data = JSON.parse(msg.data);
   data.forEach((e) => {
     if (e.value.type === devData) {
