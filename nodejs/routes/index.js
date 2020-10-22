@@ -14,22 +14,7 @@ router.get("/device/:id", (req, res, next) => {
 });
 // 根据设备id 获取历史数据
 router.get("/history/:id", (req, res, next) => {
-  // mongodb.find({ id: req.params.id }, (err, result) => {
-  //   if (err) {
-  //     res.send("some error happend");
-  //     console.log("router /history/:id error " + err);
-  //   } else {
-  //     let historyData = [];
-  //     result.forEach((e) => {
-  //       historyData.push({
-  //         time: moment(e.createAt).format("mm:ss"),
-  //         value: e.data,
-  //       });
-  //     });
-  //     historyData.reverse();
-  //     res.send(historyData);
-  //   }
-  // });
+  console.log("jump to history")
   res.render("history", { title: "HISTORY" });
 });
 // 向设备发送命令

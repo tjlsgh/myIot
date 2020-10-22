@@ -129,13 +129,19 @@ function checkDevState() {
 // 处理按钮的请求事件
 $("#led-open").click(() => {
   $.post("/led/" + deviceId, { action: reqCommand.openLed });
-  console.log("led open");
+  console.log("send: led open");
 });
 $("#led-close").click(() => {
-  console.log("led close");
   $.post("/led/" + deviceId, { action: reqCommand.closeLed });
+  console.log("send: led close");
 });
-
+$("#history-inquire").click(() => {
+  console.log(window.location.href);
+  // window.location.href = (window.location.href.split("/")[4]);
+  window.location.href = window.location.href.replace("device", "history")
+  // $.get("/history/" + deviceId, {action: "jumpToHistoryIndex"});
+  // console.log("jump: historyIndex")
+});
 var tempChartOption = {
   xAxis: {
     type: "category",
@@ -200,10 +206,10 @@ function myEchart() {
     //setOptions();
     return echart;
   };
-  this.init2 = function(eleId) {
-      let echart = echarts.init(document.getElementById(eleId));
-      return echart;
-  }
+  this.init2 = function (eleId) {
+    let echart = echarts.init(document.getElementById(eleId));
+    return echart;
+  };
 
   // 图表绘制
   this.drawLineChart = function (data, chart, chartOption, type) {
@@ -214,7 +220,9 @@ function myEchart() {
     }
   };
 
-  this.drawBarChart = function (data, chart, chartOption) {};
+  this.drawBarChart = function (xAxisData, tempData, humiData, chart, chartOption) {
+    setHistoryBarOptions(xAxisData, tempData, humiData, chart, chartOption);
+  };
   // 设置参数
   function setOptions(time, value, echart, echartOption) {
     // 判断 value 是否数字
@@ -228,6 +236,12 @@ function myEchart() {
       echartOption.xAxis.data.shift();
       echartOption.series[0].data.shift();
     }
+    echart.setOption(echartOption);
+  }
+  function setHistoryBarOptions(xAxisData, tempData, humiData, echart, echartOption) {
+    echartOption.xAxis.data.push = xAxisData;
+    echartOption.series[0].data = tempData;
+    echartOption.series[1].data = humiData;
     echart.setOption(echartOption);
   }
 }
@@ -271,7 +285,7 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
     }
   };
   // 发送请求历史数据命令
-  this.historyDataReq = function (message, callback) {
+  this.sendHistoryDataReq = function (message, callback) {
     // if(this.socket.readState === 1) {
     //   socket.send("hi,i need history data");
     // }else {

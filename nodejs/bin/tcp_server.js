@@ -24,11 +24,11 @@ var server = net.createServer((connection) => {
       connection.addr = address;
       console.log(
         "deviceId: " +
-          connection.id +
-          " light1: " +
-          connection.devices.light1 +
-          " relay1: " +
-          connection.devices.relay1
+          connection.id 
+          // " light1: " +
+          // connection.devices.light1 +
+          // " relay1: " +
+          // connection.devices.relay1
       );
       addDevice(connection);
       websocket.sendData(connection.id, JSON.stringify(data));

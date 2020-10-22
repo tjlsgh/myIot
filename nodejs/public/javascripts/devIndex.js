@@ -128,13 +128,19 @@ function checkDevState() {
 // 处理按钮的请求事件
 $("#led-open").click(() => {
   $.post("/led/" + deviceId, { action: reqCommand.openLed });
-  console.log("led open");
+  console.log("send: led open");
 });
 $("#led-close").click(() => {
-  console.log("led close");
   $.post("/led/" + deviceId, { action: reqCommand.closeLed });
+  console.log("send: led close");
 });
-
+$("#history-inquire").click(() => {
+  console.log(window.location.href);
+  // window.location.href = (window.location.href.split("/")[4]);
+  window.location.href = window.location.href.replace("device", "history")
+  // $.get("/history/" + deviceId, {action: "jumpToHistoryIndex"});
+  // console.log("jump: historyIndex")
+});
 var tempChartOption = {
   xAxis: {
     type: "category",
