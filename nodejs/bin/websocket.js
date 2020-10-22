@@ -28,7 +28,7 @@ function init(server) {
               let historyData = [];
               result.forEach((e) => {
                 historyData.push({
-                  time: moment(e.createAt).format("mm:ss"),
+                  time: moment(e.createAt).format("kk:mm:ss"),
                   value: e.data,
                 });
               });

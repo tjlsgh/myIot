@@ -31,7 +31,7 @@ function msgHandle(msg) {
     let humiData = [];
     value.forEach((e) => {
       console.log(e);
-      xAxisData.push("time: " + e.time);
+      xAxisData.push("time: " + e.time + " data");
       if (e.value !== null) {
         //console.log(e.value);
         let value = JSON.parse(e.value);
@@ -45,13 +45,22 @@ function msgHandle(msg) {
       tempData,
       humiData,
       historyChart,
-      historyOption
+      historyOption2
     );
   }
 }
 function openHandle(socket) {}
 
+
+$("#to-deviceIndex").click(() => {
+  console.log("to deviceIndex")
+  if (window.location.href.split("/")[4] == undefined)
+    window.location.href = window.location.href + "device/" + deviceId;
+  else window.location.href = window.location.href.replace("history", "device");
+});
+
 let historyOption = {
+  color: ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83',  '#ca8622', '#bda29a','#6e7074', '#546570', '#c4ccd3'],
   title: {
     text: "历史数据",
   },
@@ -102,13 +111,54 @@ let historyOption = {
     return idx * 5;
   },
 };
-$("#to-deviceIndex").click(() => {
-  console.log("to deviceIndex")
-  if (window.location.href.split("/")[4] == undefined)
-    window.location.href = window.location.href + "device/" + deviceId;
-  else window.location.href = window.location.href.replace("history", "device");
-});
-
+let historyOption2 = {
+  title: {
+    text: "历史数据",
+  },
+  legend: {
+      data: ['temp', 'humi']
+  },
+  toolbox: {
+      // y: 'bottom',
+      feature: {
+          magicType: {
+              type: ['stack', 'tiled']
+          },
+          dataView: {},
+          saveAsImage: {
+              pixelRatio: 2
+          }
+      }
+  },
+  tooltip: {},
+  xAxis: {
+      data: [],
+      splitLine: {
+          show: false
+      }
+  },
+  yAxis: {
+  },
+  series: [{
+      name: 'temp',
+      type: 'bar',
+      data: [],
+      animationDelay: function (idx) {
+          return idx * 10;
+      }
+  }, {
+      name: 'humi',
+      type: 'bar',
+      data: [],
+      animationDelay: function (idx) {
+          return idx * 10 + 100;
+      }
+  }],
+  animationEasing: 'elasticOut',
+  animationDelayUpdate: function (idx) {
+      return idx * 5;
+  }
+};
 /* [
   { time: "52:17", value: '{"type": 0, "temp": 20, "humi": 52,  "light1": 0}' },
   { time: "52:18", value: '{"type": 0, "temp": 21, "humi": 58,  "light1": 0}' },

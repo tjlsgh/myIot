@@ -1,6 +1,6 @@
 function myEchart() {
   this.init = function (echart, eleId) {
-    echart = echarts.init(document.getElementById(eleId));
+    echart = echarts.init(document.getElementById(eleId), "light");
     //setOptions();
     return echart;
   };
@@ -37,7 +37,7 @@ function myEchart() {
     echart.setOption(echartOption);
   }
   function setHistoryBarOptions(xAxisData, tempData, humiData, echart, echartOption) {
-    echartOption.xAxis.data.push = xAxisData;
+    echartOption.xAxis.data = xAxisData;
     echartOption.series[0].data = tempData;
     echartOption.series[1].data = humiData;
     echart.setOption(echartOption);

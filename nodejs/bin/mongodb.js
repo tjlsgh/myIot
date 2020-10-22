@@ -45,7 +45,7 @@ mongodb.insert = function (data, callback) {
 };
 // 返回数据方式
 const findOptions = {
-  limit: 40,
+  limit: 20,
   sort: { createAt: -1 }, // 返回最新数据
 };
 // 查找数据
