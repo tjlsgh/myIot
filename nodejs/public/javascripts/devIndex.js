@@ -134,12 +134,10 @@ $("#led-close").click(() => {
   $.post("/led/" + deviceId, { action: reqCommand.closeLed });
   console.log("send: led close");
 });
-$("#history-inquire").click(() => {
-  console.log(window.location.href);
-  // window.location.href = (window.location.href.split("/")[4]);
-  window.location.href = window.location.href.replace("device", "history")
-  // $.get("/history/" + deviceId, {action: "jumpToHistoryIndex"});
-  // console.log("jump: historyIndex")
+$("#to-historyIndex").click(() => {
+  if (window.location.href.split("/")[4] == undefined)
+    window.location.href = window.location.href + "history/" + deviceId;
+  else window.location.href = window.location.href.replace("device", "history");
 });
 var tempChartOption = {
   xAxis: {

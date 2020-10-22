@@ -1,8 +1,4 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-//const MyEchart = require("./echartInit.js");
-//let mongodb = require("../../bin/mongodb.js");
-//const moment = require("moment");
-//const webSocketInit = require("./webSocketInit.js");
 const mywebsocket = require("./myWebsocket").myWebSocket;
 const myEchart = require("./myEchart").myEchart;
 const host = window.location.host;
@@ -25,28 +21,6 @@ window.onload = function () {
       console.log("-----------ok ------------");
     }
   );
-
-  // let historyData = [];
-  // let devicdId = window.location.pathname.split("/")[2] || "mydevice1";
-  // tempHistoryChart = MyEchart.init(tempHistoryChart, "tempHistoryChart");
-  // mongodb.find({ id: devicdId }, (err, result) => {
-  //   if (err) {
-  //     console.log("history err");
-  //   } else {
-  //     result.forEach((e) => {
-  //       historyData.push({
-  //         time: moment(e.createAt).format("mm:ss"),
-  //         value: e.data,
-  //       });
-  //     });
-  //     historyData.reverse();
-  //   }
-  // });
-  // historyData.forEach((e) => {
-  //   tempData.push(e.value.temp);
-  //   humiData.push(e.value.humi);
-  // });
-  // tempHistoryChart.setOption(historyOption);
 };
 function msgHandle(msg) {
   let data = JSON.parse(msg.data);
@@ -74,26 +48,7 @@ function msgHandle(msg) {
       historyChart,
       historyOption
     );
-    //console.log("------------- " + value);
-
-    // let value = data.value;
-    // console.log("-+-+-+-+-+-" + value);
-    // let xAxisData = [];
-    // let tempData = [];
-    // let humiData = [];
-    // value.forEach((e) => {
-    //   if(e.temp && e.humi){
-    //     // xAxisData.push(e.time);
-    //     // tempData.push(e.value.temp);
-    //     // humiData.push(e.value.humi);
-    //   }
-    // });
-    // console.log(xAxisData);
-    // console.log(tempData);
-    // console.log(humiData);
-    // //mec.drawBarChart(data, chart, historyOption);
   }
-  //console.log(msg)
 }
 function openHandle(socket) {}
 
@@ -148,6 +103,12 @@ let historyOption = {
     return idx * 5;
   },
 };
+$("#to-deviceIndex").click(() => {
+  console.log("to deviceIndex")
+  if (window.location.href.split("/")[4] == undefined)
+    window.location.href = window.location.href + "device/" + deviceId;
+  else window.location.href = window.location.href.replace("history", "device");
+});
 
 /* [
   { time: "52:17", value: '{"type": 0, "temp": 20, "humi": 52,  "light1": 0}' },
