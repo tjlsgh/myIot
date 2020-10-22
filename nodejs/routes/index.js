@@ -14,7 +14,6 @@ router.get("/device/:id", (req, res, next) => {
 });
 // 根据设备id 获取历史数据
 router.get("/history/:id", (req, res, next) => {
-  res.render("history", { title: "HISTORY" });
   // mongodb.find({ id: req.params.id }, (err, result) => {
   //   if (err) {
   //     res.send("some error happend");
@@ -31,6 +30,7 @@ router.get("/history/:id", (req, res, next) => {
   //     res.send(historyData);
   //   }
   // });
+  res.render("history", { title: "HISTORY" });
 });
 // 向设备发送命令
 router.post("/led/:id", (req, res, next) => {

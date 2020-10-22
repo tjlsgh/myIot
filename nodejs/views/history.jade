@@ -2,15 +2,15 @@ extends layout
 
 block content
   script(src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts.min.js")
-
+  
   h1.title(style='font-size:3em;margin-bottom:4vh;')= title
   .container-fluid
     .row
       .col.md-12.col-sm-18
-        div#tempHistoryEchartBox
-      script(src="/javascripts/index.js")
-      .col.md-12.col-sm-18
-        div#humiHistoryEchartBox
+        div#historyEchartBox
+      //- .col.md-12.col-sm-18
+      //-   div#humiHistoryEchartBox
+      script(src="/javascripts/myHistoryIndex.js")
     
 
 

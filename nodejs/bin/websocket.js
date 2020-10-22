@@ -2,7 +2,7 @@ const WebSocket = require("ws");
 const moment = require("moment");
 const devicesList = require("./common.js").devicesList;
 const wsList = []; // 保存已连接的 websocket
-
+let mongodb = require("./mongodb.js");
 function init(server) {
   const wss = new WebSocket.Server({ server });
 
@@ -14,16 +14,65 @@ function init(server) {
     // 有浏览器请求 发送每个连接的设备状态
     sendState(ws);
     ws.on("message", (msg) => {
-      console.log("websocket received: %s", msg);
+      console.log("+++++----+++++ websocket received: %s", msg);
       try {
         let data = JSON.parse(msg);
-        // 如果有 websocket 连入，将 deviceId 放入 wsList 中
-        if (data.deviceId) {
+        // 请求历史数据 查找数据库
+        if (data.req == "historyData") {
+          console.log("++++++-----++++++ received request history data");
+          mongodb.find({ id: data.id }, (err, result) => {
+            if (err) {
+              res.send("some error happend");
+              console.log("router /history/:id error " + err);
+            } else {
+              let historyData = [];
+              result.forEach((e) => {
+                historyData.push({
+                  time: moment(e.createAt).format("mm:ss"),
+                  value: e.data,
+                });
+              });
+              historyData.reverse();
+              msg = JSON.stringify({ type: "historyData", value: historyData });
+              ws.send(msg);
+            }
+          });
+        } else if (data.deviceId) {
           addWebsocket(data.deviceId, ws);
         }
       } catch (error) {
         console.log("****** websocket err: ", error);
       }
+      // // 如果请求历史数据则发送
+      // if (msg == "historydata") {
+      //   mongodb.find({ id: req.params.id }, (err, result) => {
+      //     if (err) {
+      //       res.send("some error happend");
+      //       console.log("router /history/:id error " + err);
+      //     } else {
+      //       let historyData = [];
+      //       result.forEach((e) => {
+      //         historyData.push({
+      //           time: moment(e.createAt).format("mm:ss"),
+      //           value: e.data,
+      //         });
+      //       });
+      //       historyData.reverse();
+      //       msg = JSON.stringify({type:historyData,value:historyData});
+      //       ws.send(msg);
+      //     }
+      //   });
+      //   return;
+      // }
+      // try {
+      //   let data = JSON.parse(msg);
+      //   // 如果有 websocket 连入，将 deviceId 放入 wsList 中
+      //   if (data.deviceId) {
+      //     addWebsocket(data.deviceId, ws);
+      //   }
+      // } catch (error) {
+      //   console.log("****** websocket err: ", error);
+      // }
     });
     ws.on("close", () => {
       deleteWebsocket(ws);
@@ -36,7 +85,7 @@ function init(server) {
     });
   });
 }
-// 类型: 0 设备数据 1 设备回复
+// 发送数据 类型: 0 设备数据 1 设备回复
 function sendData(deviceId, data) {
   let msg;
   // 判断 返回
@@ -61,6 +110,7 @@ function sendData(deviceId, data) {
     }
   });
 }
+// 发送状态
 function sendState(ws) {
   devicesList.forEach((connection) => {
     console.log(

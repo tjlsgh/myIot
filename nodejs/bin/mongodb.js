@@ -8,6 +8,7 @@ var mongodb = {
   db: null,
   insert: null,
   find: null,
+  find24hoursData: null,
 };
 
 // 连接数据库
@@ -44,7 +45,7 @@ mongodb.insert = function (data, callback) {
 };
 // 返回数据方式
 const findOptions = {
-  limit: 10,
+  limit: 20,
   sort: { createAt: -1 }, // 返回最新数据
 };
 // 查找数据
@@ -58,5 +59,8 @@ mongodb.find = function (data, callback) {
         callback(null, result);
       });
   } else callback("mongodb is not connected");
+};
+mongodb.find24hoursData = function () {
+  
 };
 module.exports = mongodb;

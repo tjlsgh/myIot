@@ -1,6 +1,8 @@
-// 浏览器不识别require  需要 npm install -g browserify   通过browserify打包模块
-const MyEchart = require("./echartInit.js");
-const Mywebsocket = require("./webSocketInit.js");
+// 浏览器不识别require  需要安装 npm install -g browserify   通过browserify打包模块 browserify devIndex.js -o myDevIndex.js
+//const MyEchart = require("./echartInit.js");
+//const Mywebsocket = require("./webSocketInit.js");
+const mywebsocket = require("./myWebsocket").myWebSocket;
+const myEchart = require("./myEchart").myEchart;
 var tempChart, humiChart;
 const host = window.location.host;
 const deviceId = window.location.pathname.split("/")[2] || "mydevice1";
@@ -21,11 +23,20 @@ const reqCommand = {
   openLed: "1",
   checkDevState: "2",
 };
+
 window.onload = function () {
-  Mywebsocket.init(host, msgHandle, deviceId);
+  //Mywebsocket.init(host, msgHandle, deviceId);
+  mws = new mywebsocket(host, msgHandle, openHandle, deviceId);
+  mws.init();
+  // tempChart = mws.init(tempChart, "tempEchartBox");
+  // humiChart = mws.init(tempChart, "humiEchartBox");
   checkDevState();
-  tempChart = MyEchart.init(tempChart, "tempEchartBox");
-  humiChart = MyEchart.init(humiChart, "humiEchartBox");
+  //tempChart = MyEchart.init(tempChart, "tempEchartBox");
+  //humiChart = MyEchart.init(humiChart, "humiEchartBox");
+
+  mec = new myEchart();
+  tempChart = mec.init(tempChart, "tempEchartBox");
+  humiChart = mec.init(tempChart, "humiEchartBox");
   console.log("my chart init");
 };
 window.addEventListener("beforeunload", function (event) {
@@ -40,14 +51,18 @@ function msgHandle(msg) {
   let data = JSON.parse(msg.data);
   data.forEach((e) => {
     if (e.value.type === devData) {
-      MyEchart.drawChart(e, tempChart, tempChartOption, "temp");
-      MyEchart.drawChart(e, humiChart, humiChartOption, "humi");
+      mec.drawLineChart(e, tempChart, tempChartOption, "temp");
+      mec.drawLineChart(e, humiChart, humiChartOption, "humi");
       setMinMaxAvg(e.value);
     } else if (e.value.type === devState) {
       console.log("stateHandle......");
       setDevState(e.value.devices);
     }
   });
+}
+function openHandle(socket) {
+  let data = JSON.stringify({ deviceId: deviceId });
+  socket.send(data);
 }
 // 设置设备状态
 function setDevState(devices) {
