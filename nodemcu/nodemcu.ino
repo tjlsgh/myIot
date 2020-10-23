@@ -7,7 +7,7 @@ const char* host = "192.168.1.181";
 const int port = 8266;// tcp 使用端口
 
 const char* ssid = "pdc666";
-const char* password = "hhxxttxs";
+const char* password = "hhxxttxs2.0";
 
 const char* deviceId = "mydevice1";
 int tick = 1000;
