@@ -56,10 +56,22 @@ void loop() {
   // put your main code here, to run repeatedly:
   if (client.connect(host, port)) {
     Serial.println("Connected!");
-    // 首次连接先发送设备 ID 和状态
-    sprintf(res, "{\"type\": 1,\"Id\": \"%s\", \"devices\": {\"light1\": %d, \"relay1\": %d}}",dstate.Id, dstate.light1, dstate.relay1);
-    //(res, "{\"devices\": {\"light1\": %d, \"relay1\": %d}}",dstate.light1, dstate.relay1);
-    client.print(res);
+    boolean sevReceiveId = false;
+    while (!sevReceiveId) {
+      if (client.available()) {
+         String line = client.readStringUntil('\n');
+         if (line = ("OK")) {
+          sevReceiveId = true;
+          Serial.println("server received id ok");
+          break;
+         }
+      }
+      // 首次连接先发送设备 ID 和状态
+      sprintf(res, "{\"type\": 1,\"Id\": \"%s\", \"devices\": {\"light1\": %d, \"relay1\": %d}}",dstate.Id, dstate.light1, dstate.relay1);
+      //(res, "{\"devices\": {\"light1\": %d, \"relay1\": %d}}",dstate.light1, dstate.relay1);
+      client.print(res);
+      delay(1000);
+    }
   } else {
     Serial.println("Connecting...");  
     delay(500);

@@ -6,24 +6,24 @@ let mongodb = require("./mongodb.js");
 function init(server) {
   const wss = new WebSocket.Server({ server });
 
-  console.log("server websocket created");
+  console.log("--- server websocket created");
   wss.on("connection", (ws, req) => {
     ws.ip = req.connection.remoteAddress;
-    console.log("websocket connected: ip =" + ws.ip);
+    console.log("--- websocket connected: ip =" + ws.ip);
 
     // 有浏览器请求 发送每个连接的设备状态
     sendState(ws);
     ws.on("message", (msg) => {
-      console.log("+++++----+++++ websocket received: %s", msg);
+      console.log("--- websocket received: %s", msg);
       try {
         let data = JSON.parse(msg);
         // 请求历史数据 查找数据库
         if (data.req == "historyData") {
-          console.log("++++++-----++++++ received request history data");
+          console.log("--- received request history data");
           mongodb.find({ id: data.id }, (err, result) => {
             if (err) {
               res.send("some error happend");
-              console.log("router /history/:id error " + err);
+              console.log("--- router /history/:id error " + err);
             } else {
               let historyData = [];
               result.forEach((e) => {
@@ -41,7 +41,7 @@ function init(server) {
           addWebsocket(data.deviceId, ws);
         }
       } catch (error) {
-        console.log("****** websocket err: ", error);
+        console.log("--- websocket err: ", error);
       }
       // // 如果请求历史数据则发送
       // if (msg == "historydata") {
@@ -76,12 +76,12 @@ function init(server) {
     });
     ws.on("close", () => {
       deleteWebsocket(ws);
-      console.log("****** websocket close.");
+      console.log("--- websocket close.");
     });
 
     ws.on("error", (err) => {
       deleteWebsocket(ws);
-      console.log("****** websocket error.", err);
+      console.log("--- websocket error.", err);
     });
   });
 }
@@ -95,7 +95,7 @@ function sendData(deviceId, data) {
     data = JSON.parse(data);
     msg = JSON.stringify([{ time: moment().format("mm:ss"), value: data }]);
   } catch (error) {
-    return console.log("JSON stringfy err");
+    return console.log("--- JSON stringfy err");
   }
 
   wsList.forEach((v) => {
@@ -114,7 +114,7 @@ function sendData(deviceId, data) {
 function sendState(ws) {
   devicesList.forEach((connection) => {
     console.log(
-      "---------------send state:  Id: " + connection.id,
+      "--- send state:  Id: " + connection.id,
       " light1: " + connection.devices.light1
     );
     let deviceState = JSON.stringify([
@@ -140,7 +140,7 @@ function deleteWebsocket(ws) {
   });
   if (wsIndex) {
     wsList.splice(wsIndex, 1);
-    console.log("delete WebSocket:", ws.ip);
+    console.log("--- delete WebSocket:", ws.ip);
   }
 }
 module.exports = {

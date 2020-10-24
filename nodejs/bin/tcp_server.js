@@ -6,10 +6,10 @@ const PORT = "8266";
 const Timeout = 15 * 1000;
 
 var server = net.createServer((connection) => {
-  console.log("client connected");
+  console.log("--- client connected");
   let address =
     connection.address().address + "  port:" + connection.remotePort;
-  console.log("address: " + address);
+  console.log("--- address: " + address);
 
   connection.on("data", (data) => {
     // 设备 ID
@@ -17,13 +17,13 @@ var server = net.createServer((connection) => {
       try {
         data = JSON.parse(data);
       } catch (error) {
-        console.log("tcp data parse error");
+        console.log("--- tcp data parse error");
       }
       connection.id = data.Id;
       connection.devices = data.devices;
       connection.addr = address;
       console.log(
-        "deviceId: " +
+        "--- deviceId: " +
           connection.id 
           // " light1: " +
           // connection.devices.light1 +
@@ -31,6 +31,7 @@ var server = net.createServer((connection) => {
           // connection.devices.relay1
       );
       addDevice(connection);
+      connection.write("OK", "ascii");
       websocket.sendData(connection.id, JSON.stringify(data));
       return;
     } else {
@@ -38,7 +39,7 @@ var server = net.createServer((connection) => {
         { id: connection.id, data: connection.lastValue },
         (err) => {
           if (err) {
-            console.log("insert data err", err);
+            console.log("--- insert data err", err);
           }
         }
       );
@@ -47,31 +48,31 @@ var server = net.createServer((connection) => {
 
     let str = address + " receive: " + data.toString("ascii");
     connection.lastValue = data.toString("ascii");
-    console.log(str);
+    console.log("--- " + str);
   });
 
   // 关闭连接
   connection.on("end", function () {
-    console.log("客户端关闭连接");
+    console.log("--- 客户端关闭连接");
   });
 
   connection.on("close", () => {
-    console.log(address, connection.id, "close");
+    console.log("--- " + address, connection.id, "close");
   });
 
   connection.on("error", () => {
-    console.log(address, connection.id, "error");
+    console.log("--- " + address, connection.id, "error");
   });
 
   // 设置连接时间，超出时间断开
   connection.setTimeout(Timeout);
   connection.on("timeout", () => {
-    console.log(address, connection.id, "time out");
+    console.log("--- " + address, connection.id, "time out");
     connection.end();
   });
 });
 server.listen(PORT, () => {
-  console.log("server is listening");
+  console.log("--- server is listening");
 });
 
 function addDevice(connection) {

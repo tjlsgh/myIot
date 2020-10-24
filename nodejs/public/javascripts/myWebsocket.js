@@ -23,9 +23,9 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
     }
     if (window.WebSocket) {
       socket = new WebSocket("ws://" + this.host);
-      console.log("this host: " + this.host);
+      console.log("--- this host: " + this.host);
       setSocketOption(socket);
-      console.log("socket init");
+      console.log("--- socket init");
       //this.socket = socket;
     } else {
       alert("your Browser do not support websocket!");
@@ -40,7 +40,7 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
     // }
     this.waitForConnection(function () {
       socket.send(message);
-      console.log("0.0.0.0.0.0.0.")
+      // console.log("0.0.0.0.0.0.0.")
       if (typeof callback !== "undefined") {
         callback();
       }
@@ -62,25 +62,25 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
   };
   function setSocketOption(socket) {
     socket.onmessage = function (msg) {
-      console.log("------ websocket receive: " + msg.data);
+      console.log("--- websocket receive: " + msg.data);
       try {
         msgHandle(msg);
       } catch (err) {
-        console.log(err);
+        console.log("--- " + err);
       }
     };
     socket.onopen = function (event) {
-      console.log("------ websocket connected");
+      console.log("--- websocket connected");
       // let data = JSON.stringify({ deviceId: deviceId });
       // socket.send(data);
       openHandle(socket);
     };
     socket.onclose = function (event) {
-      console.log("------ websocket closed");
+      console.log("--- websocket closed");
     };
 
     socket.onerror = function (event) {
-      console.log("------ websocket error:", event);
+      console.log("--- websocket error:", event);
     };
     return socket;
   }

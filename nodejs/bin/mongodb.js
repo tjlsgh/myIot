@@ -16,8 +16,8 @@ MongoClient.connect(
   url,
   { useNewUrlParser: true, useUnifiedTopology: true },
   (err, mongoClient) => {
-    if (err) return console.log("connect mongodb err: ", err);
-    console.log("connect mongodb ok");
+    if (err) return console.log("--- connect mongodb err: ", err);
+    console.log("--- connect mongodb ok");
 
     mongodb.dbClient = mongoClient;
     mongodb.db = mongoClient.db(dbName);
@@ -25,9 +25,9 @@ MongoClient.connect(
     let collection = mongodb.db.collection("device-data");
     // 检查索引
     collection.indexExists("createdAt_1", (err, result) => {
-      if (err) return console.log(err);
+      if (err) return console.log("--- " + err);
       if (!result) {
-        console.log("create index: 'createAt' : expireAfterSeconds");
+        console.log("--- create index: 'createAt' : expireAfterSeconds");
         collection.createIndex({ createAt: 1 }, { expireAfterSeconds: 3600 });
       }
     });
@@ -41,7 +41,7 @@ mongodb.insert = function (data, callback) {
       if (err) callback(err);
       callback(null, result);
     });
-  } else callback("mongodb is not connected");
+  } else callback("--- mongodb is not connected");
 };
 // 返回数据方式
 const findOptions = {
@@ -58,7 +58,7 @@ mongodb.find = function (data, callback) {
         if (err) callback(err);
         callback(null, result);
       });
-  } else callback("mongodb is not connected");
+  } else callback("--- mongodb is not connected");
 };
 mongodb.find24hoursData = function () {
   

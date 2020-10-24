@@ -1,12 +1,14 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+
+  /* 我是分界线 */
 const mywebsocket = require("./myWebsocket").myWebSocket;
 const myEchart = require("./myEchart").myEchart;
 const host = window.location.host;
 const deviceId = window.location.pathname.split("/")[2] || "mydevice1";
 var historyChart;
-var tempHistoryChart, humiHistoryChart;
-var tempData = [];
-var humiData = [];
+// var tempHistoryChart, humiHistoryChart;
+// var tempData = [];
+// var humiData = [];
 window.onload = function () {
   //let socket = webSocketInit.init();
   mws = new mywebsocket(host, msgHandle, openHandle, deviceId);
@@ -40,7 +42,7 @@ function msgHandle(msg) {
         humiData.push(value.humi);
       }
     });
-    console.log(xAxisData);
+    // console.log(xAxisData);
     mec.drawBarChart(
       xAxisData,
       tempData,
@@ -54,7 +56,7 @@ function openHandle(socket) {}
 
 
 $("#to-deviceIndex").click(() => {
-  console.log("to deviceIndex")
+  console.log("--- to deviceIndex")
   if (window.location.href.split("/")[4] == undefined)
     window.location.href = window.location.href + "device/" + deviceId;
   else window.location.href = window.location.href.replace("history", "device");
@@ -183,6 +185,7 @@ let historyOption2 = {
   { time: "37:47", value: '{"type": 0, "temp": 28, "humi": 53,  "light1": 0}' },
 ];
  */
+/* 我是分界线 */
 
 },{"./myEchart":2,"./myWebsocket":3}],2:[function(require,module,exports){
 function myEchart() {
@@ -261,9 +264,9 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
     }
     if (window.WebSocket) {
       socket = new WebSocket("ws://" + this.host);
-      console.log("this host: " + this.host);
+      console.log("--- this host: " + this.host);
       setSocketOption(socket);
-      console.log("socket init");
+      console.log("--- socket init");
       //this.socket = socket;
     } else {
       alert("your Browser do not support websocket!");
@@ -278,7 +281,7 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
     // }
     this.waitForConnection(function () {
       socket.send(message);
-      console.log("0.0.0.0.0.0.0.")
+      // console.log("0.0.0.0.0.0.0.")
       if (typeof callback !== "undefined") {
         callback();
       }
@@ -300,25 +303,25 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
   };
   function setSocketOption(socket) {
     socket.onmessage = function (msg) {
-      console.log("------ websocket receive: " + msg.data);
+      console.log("--- websocket receive: " + msg.data);
       try {
         msgHandle(msg);
       } catch (err) {
-        console.log(err);
+        console.log("--- " + err);
       }
     };
     socket.onopen = function (event) {
-      console.log("------ websocket connected");
+      console.log("--- websocket connected");
       // let data = JSON.stringify({ deviceId: deviceId });
       // socket.send(data);
       openHandle(socket);
     };
     socket.onclose = function (event) {
-      console.log("------ websocket closed");
+      console.log("--- websocket closed");
     };
 
     socket.onerror = function (event) {
-      console.log("------ websocket error:", event);
+      console.log("--- websocket error:", event);
     };
     return socket;
   }

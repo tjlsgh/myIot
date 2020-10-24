@@ -1,4 +1,6 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
+
+/* 我是分界线 */
 // 浏览器不识别require  需要安装 npm install -g browserify   通过browserify打包模块 browserify devIndex.js -o myDevIndex.js
 //const MyEchart = require("./echartInit.js");
 //const Mywebsocket = require("./webSocketInit.js");
@@ -38,13 +40,13 @@ window.onload = function () {
   mec = new myEchart();
   tempChart = mec.init(tempChart, "tempEchartBox");
   humiChart = mec.init(tempChart, "humiEchartBox");
-  console.log("my chart init");
+  console.log("--- my chart init");
 };
 window.addEventListener("beforeunload", function (event) {
-  console.log("I am the 2nd one.");
+  console.log("--- I am the 2nd one.");
 });
 window.addEventListener("unload", function (event) {
-  console.log("I am the 4th and last one");
+  console.log("--- I am the 4th and last one");
 });
 
 // 解析websocket收到的数据类型
@@ -56,7 +58,7 @@ function msgHandle(msg) {
       mec.drawLineChart(e, humiChart, humiChartOption, "humi");
       setMinMaxAvg(e.value);
     } else if (e.value.type === devState) {
-      console.log("stateHandle......");
+      console.log("--- stateHandle......");
       setDevState(e.value.devices);
     }
   });
@@ -68,7 +70,7 @@ function openHandle(socket) {
 // 设置设备状态
 function setDevState(devices) {
   // let eleClass = "." + device; // 元素 类名
-  console.log("------ set states");
+  console.log("--- set states");
   for (let key in devices) {
     if (key == "light1") {
       setDevStateHelper(key, devices);
@@ -124,16 +126,16 @@ function setDevStateHelper(key, devices) {
 // 发送查看设备状态的命令
 function checkDevState() {
   $.post("/checkDevState/" + deviceId, { action: reqCommand.checkDevState });
-  console.log("check device state");
+  console.log("--- check device state");
 }
 // 处理按钮的请求事件
 $("#led-open").click(() => {
   $.post("/led/" + deviceId, { action: reqCommand.openLed });
-  console.log("send: led open");
+  console.log("--- send: led open");
 });
 $("#led-close").click(() => {
   $.post("/led/" + deviceId, { action: reqCommand.closeLed });
-  console.log("send: led close");
+  console.log("--- send: led close");
 });
 $("#to-historyIndex").click(() => {
   if (window.location.href.split("/")[4] == undefined)
@@ -196,6 +198,8 @@ var humiChartOption = {
     fontSize: 20,
   },
 };
+/* 我是分界线 */
+
 
 },{"./myEchart":2,"./myWebsocket":3}],2:[function(require,module,exports){
 function myEchart() {
@@ -274,9 +278,9 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
     }
     if (window.WebSocket) {
       socket = new WebSocket("ws://" + this.host);
-      console.log("this host: " + this.host);
+      console.log("--- this host: " + this.host);
       setSocketOption(socket);
-      console.log("socket init");
+      console.log("--- socket init");
       //this.socket = socket;
     } else {
       alert("your Browser do not support websocket!");
@@ -291,7 +295,7 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
     // }
     this.waitForConnection(function () {
       socket.send(message);
-      console.log("0.0.0.0.0.0.0.")
+      // console.log("0.0.0.0.0.0.0.")
       if (typeof callback !== "undefined") {
         callback();
       }
@@ -313,25 +317,25 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
   };
   function setSocketOption(socket) {
     socket.onmessage = function (msg) {
-      console.log("------ websocket receive: " + msg.data);
+      console.log("--- websocket receive: " + msg.data);
       try {
         msgHandle(msg);
       } catch (err) {
-        console.log(err);
+        console.log("--- " + err);
       }
     };
     socket.onopen = function (event) {
-      console.log("------ websocket connected");
+      console.log("--- websocket connected");
       // let data = JSON.stringify({ deviceId: deviceId });
       // socket.send(data);
       openHandle(socket);
     };
     socket.onclose = function (event) {
-      console.log("------ websocket closed");
+      console.log("--- websocket closed");
     };
 
     socket.onerror = function (event) {
-      console.log("------ websocket error:", event);
+      console.log("--- websocket error:", event);
     };
     return socket;
   }
