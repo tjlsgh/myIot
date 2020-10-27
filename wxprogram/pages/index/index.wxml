@@ -1,0 +1,15 @@
+<!--index.wxml-->
+<view>
+  <image class="background" mode="right" src="../../images/indexBG.jpg"></image>
+  <view style="text-align: center; font-size:24px"><text style="color:white">MyIotSys</text></view>
+  <view class="container" style='height:200px;margin-top:5vh;'>
+    <ec-canvas id="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas>
+  </view>
+  <view style="display:flex; margin-top: 10px">
+    <button type="primary" bindtap="led_open">开灯</button>
+    <button type="warn" bindtap="led_close">关灯</button>
+  </view>
+  <view style="display: flex; margin-top: 20px">
+    <input value="{{deviceId}}" confirm-type="done" bindconfirm="changeDeviceId" style='border:1px solid #ccc; padding-bottom : 0px' placeholder='默认设备：mydevice1' />
+  </view>
+</view>

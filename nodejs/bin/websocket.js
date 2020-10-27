@@ -37,7 +37,7 @@ function init(server) {
               ws.send(msg);
             }
           });
-        } else if (data.deviceId) {
+        } else if (data.deviceId) { // 将设备id和此websocket保存
           addWebsocket(data.deviceId, ws);
         }
       } catch (error) {
