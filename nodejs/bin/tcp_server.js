@@ -3,7 +3,7 @@ const mongodb = require("./mongodb.js");
 const websocket = require("./websocket");
 const devicesList = require("./common.js").devicesList;
 const PORT = "8266";
-const Timeout = 15 * 1000;
+const Timeout = 5 * 1000;
 
 var server = net.createServer((connection) => {
   console.log("--- client connected");
@@ -54,14 +54,17 @@ var server = net.createServer((connection) => {
   // 关闭连接
   connection.on("end", function () {
     console.log("--- 客户端关闭连接");
+    deleteDevice(connection);
   });
 
   connection.on("close", () => {
     console.log("--- " + address, connection.id, "close");
+    deleteDevice(connection);
   });
 
   connection.on("error", () => {
     console.log("--- " + address, connection.id, "error");
+    deleteDevice(connection);
   });
 
   // 设置连接时间，超出时间断开
@@ -69,6 +72,7 @@ var server = net.createServer((connection) => {
   connection.on("timeout", () => {
     console.log("--- " + address, connection.id, "time out");
     connection.end();
+    deleteDevice(connection);
   });
 });
 server.listen(PORT, () => {
@@ -115,11 +119,12 @@ function sendCommand(id, command) {
   if (devices.length === 0) {
     return;
   }
-  devicesList.forEach((connection) => {
+  devices.forEach((connection) => {
     connection.write(command, "ascii");
   });
 }
 
 module.exports = {
+  devicesList: devicesList,
   sentCommand: sendCommand,
 };

@@ -4,20 +4,6 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
   //this.socket;
   let socket;
   this.init = function () {
- 
-    // //let socket;
-    // if (!window.WebSocket) {
-    //   window.WebSocket = window.MozWebSocket;
-    // }
-    // if (window.WebSocket) {
-    //   this.socket = new WebSocket("ws://" + this.host);
-    //   setSocketOption(this.socket);
-    //   console.log("socket init");
-    //   //this.socket = socket;
-    // } else {
-    //   alert("your Browser do not support websocket!");
-    // }
-        //let socket;
     if (!window.WebSocket) {
       window.WebSocket = window.MozWebSocket;
     }
@@ -33,11 +19,6 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
   };
   // 发送请求历史数据命令
   this.sendHistoryDataReq = function (message, callback) {
-    // if(this.socket.readState === 1) {
-    //   socket.send("hi,i need history data");
-    // }else {
-    //   console.log("not open");
-    // }
     this.waitForConnection(function () {
       socket.send(message);
       // console.log("0.0.0.0.0.0.0.")

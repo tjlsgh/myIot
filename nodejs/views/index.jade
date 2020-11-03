@@ -3,7 +3,25 @@ extends layout
 block content
   script(src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts.min.js")
 
-  h1.title(style='font-size:3em;margin-bottom:4vh;')= title
+  .header
+    h1.title(style="font-size:3em;margin-bottom:4vh;")= title
+      .btn-group.dropdown(style="position:absolute;left:10px;")
+        button.btn.btn-danger.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 设备列表
+        .dropdown-menu
+          table.table.table-striped
+            tbody
+              tr
+                th #
+                th IP
+                th ID
+                th >
+            tbody.devicesList
+              .dropdown-item
+                  //- tr
+                    td #{index}
+                    td #{device.addr}
+                    td #{device.id} 
+                    td(style="overflow: hidden;") #{device.lastValue || '无'} 
   .container-fluid
     .row
       .col-md-4.col-sm-6
@@ -51,6 +69,7 @@ block content
               p.title 平均：
               p.AvgHumi(style='color:white') 25 
               p(style='color:white') %rh
+    .row
       .col-md-4.col-sm-6
         .block
           img.block-img(src="/images/option.png", alt="")

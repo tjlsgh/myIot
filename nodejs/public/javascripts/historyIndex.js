@@ -6,9 +6,6 @@ const myEchart = require("./myEchart").myEchart;
 const host = window.location.host;
 const deviceId = window.location.pathname.split("/")[2] || "mydevice1";
 var historyChart;
-// var tempHistoryChart, humiHistoryChart;
-// var tempData = [];
-// var humiData = [];
 window.onload = function () {
   //let socket = webSocketInit.init();
   mws = new mywebsocket(host, msgHandle, openHandle, deviceId);

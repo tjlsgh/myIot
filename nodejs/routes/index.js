@@ -14,19 +14,30 @@ router.get("/device/:id", (req, res, next) => {
 });
 // 根据设备id 获取历史数据
 router.get("/history/:id", (req, res, next) => {
-  console.log("jump to history")
+  console.log("--- jump to history");
   res.render("history", { title: "HISTORY" });
 });
 // 向设备发送命令
 router.post("/led/:id", (req, res, next) => {
-  console.log("post /led/:id ", req.params.id, req.body);
+  console.log("--- post /led/:id ", req.params.id, req.body);
   tcpServer.sentCommand(req.params.id, req.body.action);
   res.send({ code: 0, msg: "command send" });
 });
 // 查看设备状态
 router.post("/checkDevState/:id", (req, res, next) => {
-  console.log("post /checkDevState/:id ", req.params.id, req.body);
+  console.log("--- post /checkDevState/:id ", req.params.id, req.body);
   tcpServer.sentCommand(req.params.id, req.body.action);
   res.send({ code: 0, msg: "command send" });
+});
+// 获取已连接设备列表
+router.get("/devicesList", (req, res, next) => {
+  let devicesList = [];
+  tcpServer.devicesList.forEach((device) => {
+    devicesList.push({
+      addr: device.addr,
+      id: device.id,
+    });
+  });
+  res.json(devicesList);
 });
 module.exports = router;

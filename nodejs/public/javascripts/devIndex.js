@@ -8,7 +8,8 @@ const mywebsocket = require("./myWebsocket").myWebSocket;
 const myEchart = require("./myEchart").myEchart;
 var tempChart, humiChart;
 const host = window.location.host;
-const deviceId = window.location.pathname.split("/")[2] || "mydevice1";
+const deviceId = window.location.pathname.split("/")[2] || "sensor001";
+let devicesList = [];
 let devData = 0,
   devState = 1; // 标识状态、数据
 let MinMaxAvgData = [];
@@ -83,7 +84,7 @@ function setDevState(devices) {
 // 好蠢的写法呀 QAQ
 function setMinMaxAvg(value) {
   if (MinMaxAvgData.length == 0) {
-    console.log("init minmaxavgdata");
+    console.log("--- init minmaxavgdata");
     for (let i = 0; i < 3; i++) MinMaxAvgData[i] = value.temp;
     for (let i = 3; i < 6; i++) MinMaxAvgData[i] = value.humi;
     for (let i = 0; i < 6; i++) {
@@ -96,7 +97,7 @@ function setMinMaxAvg(value) {
     } else if (value.temp > MinMaxAvgData[1]) {
       MinMaxAvgData[1] = value.temp;
       $(dataEleClass[1]).text(MinMaxAvgData[1] + " ");
-      $(dataEleClass[2]).text((MinMaxAvgData[0] + MinMaxAvgData[1]) / 2 + " ");
+      $(dataEleClass[2]).text(((MinMaxAvgData[0] + MinMaxAvgData[1]) / 2).toFixed(2) + " ");
     }
     if (value.humi < MinMaxAvgData[3]) {
       MinMaxAvgData[3] = value.humi;
@@ -104,7 +105,7 @@ function setMinMaxAvg(value) {
     } else if (value.humi > MinMaxAvgData[4]) {
       MinMaxAvgData[4] = value.humi;
       $(dataEleClass[4]).text(MinMaxAvgData[4] + "");
-      $(dataEleClass[5]).text((MinMaxAvgData[3] + MinMaxAvgData[4]) / 2 + " ");
+      $(dataEleClass[5]).text(((MinMaxAvgData[3] + MinMaxAvgData[4]) / 2).toFixed(2) + " ");
     }
   }
 }
@@ -137,11 +138,56 @@ $("#led-close").click(() => {
   $.post("/led/" + deviceId, { action: reqCommand.closeLed });
   console.log("--- send: led close");
 });
+// 跳转到历史数据页面
 $("#to-historyIndex").click(() => {
   if (window.location.href.split("/")[4] == undefined)
     window.location.href = window.location.href + "history/" + deviceId;
   else window.location.href = window.location.href.replace("device", "history");
 });
+// 显示连接设备列表
+$(".dropdown").on("show.bs.dropdown", ()=> {
+  // 发送获取连接设备的请求并渲染出来
+  $.get("/devicesList", (res) => {
+    devicesList = res;
+  })
+  let html = "";
+  // let id = "";
+  devicesList.forEach((device,index) => {
+    // console.log(device);
+    let id = device.id;
+    // console.log(id);
+    html += '<tr><td>'+index+'</td><td>'+device.addr+
+    '</td><td><button id='+id+'>'+device.id+'</button></td></tr>';
+    $(".devicesList").html(html);
+   
+  });
+  initDevClick();
+})
+// 点击设备列表后初始化点击按钮
+function initDevClick() {
+  // 跳转到某一设备页面
+  for (const key in devicesList) {
+    // console.log(devicesList[key]);
+    let id = devicesList[key].id
+    $("#"+ id).click(() => {
+      // 替换字符串
+      console.log("111")
+      let href = window.location.href;
+      if (href.split("/")[4] == undefined)
+        window.location.href = href + "device/" + id;
+      else {
+        let lastFixIndex = href.lastIndexOf("/");
+        let startIndex = lastFixIndex + 1;
+        let totalLength = href.length;
+        let cutLength = totalLength-startIndex;
+        let cutContent = href.substr(startIndex, cutLength);
+        if(cutContent == id) return;
+        window.location.href = href.replace(cutContent, id);
+      }
+    });
+  }
+}
+
 var tempChartOption = {
   xAxis: {
     type: "category",
@@ -150,8 +196,16 @@ var tempChartOption = {
   yAxis: {
     type: "value",
   },
+  tooltip: {
+    trigger: 'axis'
+  },
+  toolbox: {
+    show: true,
+    trigger: 'axis',
+  },
   series: [
     {
+      name: '温度',
       data: [],
       type: "line",
       smooth: true,
@@ -178,8 +232,16 @@ var humiChartOption = {
   yAxis: {
     type: "value",
   },
+  tooltip: {
+    trigger: 'axis'
+  },
+  toolbox: {
+    show: true,
+    trigger: 'axis',
+  },
   series: [
     {
+      name: "湿度",
       data: [],
       type: "line",
       smooth: true,
@@ -259,20 +321,6 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
   //this.socket;
   let socket;
   this.init = function () {
- 
-    // //let socket;
-    // if (!window.WebSocket) {
-    //   window.WebSocket = window.MozWebSocket;
-    // }
-    // if (window.WebSocket) {
-    //   this.socket = new WebSocket("ws://" + this.host);
-    //   setSocketOption(this.socket);
-    //   console.log("socket init");
-    //   //this.socket = socket;
-    // } else {
-    //   alert("your Browser do not support websocket!");
-    // }
-        //let socket;
     if (!window.WebSocket) {
       window.WebSocket = window.MozWebSocket;
     }
@@ -288,11 +336,6 @@ function myWebSocket(host, msgHandle, openHandle, deviceId) {
   };
   // 发送请求历史数据命令
   this.sendHistoryDataReq = function (message, callback) {
-    // if(this.socket.readState === 1) {
-    //   socket.send("hi,i need history data");
-    // }else {
-    //   console.log("not open");
-    // }
     this.waitForConnection(function () {
       socket.send(message);
       // console.log("0.0.0.0.0.0.0.")
