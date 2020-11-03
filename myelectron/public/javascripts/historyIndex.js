@@ -53,7 +53,7 @@ function openHandle(socket) {}
 
 
 $("#to-deviceIndex").click(() => {
-  console.log("to deviceIndex")
+  console.log("--- to deviceIndex")
   if (window.location.href.split("/")[4] == undefined)
     window.location.href = window.location.href + "device/" + deviceId;
   else window.location.href = window.location.href.replace("history", "device");

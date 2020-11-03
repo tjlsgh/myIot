@@ -15,7 +15,7 @@ MongoClient.connect(
   url,
   { useNewUrlParser: true, useUnifiedTopology: true },
   (err, mongoClient) => {
-    if (err) return console.log("connect mongodb err: ", err);
+    if (err) return console.log("--- connect mongodb err: ", err);
     console.log("--- connect mongodb ok");
 
     mongodb.dbClient = mongoClient;

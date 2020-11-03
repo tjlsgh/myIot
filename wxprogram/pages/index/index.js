@@ -43,11 +43,21 @@ let option = {
   series: [{
       name: '温度',
       type: 'line',
+      itemStyle : {
+        normal : {
+            color:'#f5bf58',   // 设置最高气温线的颜色
+        }
+      },
       data: []
     },
     {
       name: '湿度',
       type: 'line',
+      itemStyle : {
+        normal : {
+            color:'#fdfeff',   // 设置最高气温线的颜色
+        }
+      },
       data: []
     },
   ]

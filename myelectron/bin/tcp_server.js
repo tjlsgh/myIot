@@ -1,6 +1,5 @@
 const net = require("net");
 const mongodb = require("./mongodb.js");
-//const websocket = require("./websocket");
 const devicesList = require("./common.js").devicesList;
 const { ipcMain } = require("electron");
 const moment = require("moment");
@@ -56,7 +55,7 @@ const server = net.createServer((connection) => {
         { id: connection.id, data: connection.lastValue },
         (err) => {
           if (err) {
-            console.log("insert data err", err);
+            console.log("--- insert data err", err);
           }
         }
       );
@@ -146,7 +145,7 @@ function sendCommand(id, command) {
   if (devices.length === 0) {
     return;
   }
-  devicesList.forEach((connection) => {
+  devices.forEach((connection) => {
     connection.write(command, "ascii");
   });
 }

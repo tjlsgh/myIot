@@ -35,8 +35,8 @@ App({
   },
   globalData: {
     userInfo: null,
-    webSocketUrl: "ws://127.0.0.1:3000",
-    httpUrl: "http://127.0.0.1:3000",
-    deviceId: "mydevice"
+    webSocketUrl: "ws://47.106.185.79:3000",
+    httpUrl: "http://47.106.185.79:3000",
+    deviceId: "sensor001"
   }
 })

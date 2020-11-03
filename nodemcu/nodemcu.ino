@@ -4,12 +4,13 @@
 #define DHT11_PIN 4
 
 const char* host = "192.168.1.181";
+//const char* host = "47.106.185.79";
 const int port = 8266;// tcp 使用端口
 
 const char* ssid = "pdc666";
 const char* password = "hhxxttxs2.0";
 
-const char* deviceId = "mydevice1";
+const char* deviceId = "sensor001";
 int tick = 1000;
 char data[50] = ""; // 发送数据
 char res[50] = ""; // 发送状态

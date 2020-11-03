@@ -40,7 +40,7 @@ ipcRenderer.on("deviceData", (event, arg) => {
       mec.drawLineChart(data, humiChart, humiChartOption, "humi");
       setMinMaxAvg(data.value);
     } else if (data.value.type === devState) {
-      console.log("stateHandle......");
+      console.log("--- stateHandle......");
       setDevState(data.value.devices);
     }
   })

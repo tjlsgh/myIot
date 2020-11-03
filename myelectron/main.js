@@ -2,10 +2,10 @@
 const tcp_server = require("./bin/tcp_server.js");
 const { app, BrowserWindow } = require("electron");
 const path = require("path");
-
+let mainWindow
 function createWindow() {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     // width: 1000,
     // height: 800,
     webPreferences: {
@@ -17,13 +17,12 @@ function createWindow() {
   // and load the index.html of the app.
   mainWindow.loadFile("index.html");
 
-  // mainWindow.on("close", () => {
-  //   mainWindow = null;
-  //   tcp_server.subscribeDevId = null;
-  // })
+  mainWindow.on("close", () => {
+    mainWindow = null;
+  })
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished
@@ -38,6 +37,7 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 });
+
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
