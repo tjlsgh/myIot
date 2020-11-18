@@ -3,40 +3,62 @@ extends layout
 block content
   script(src="https://cdn.bootcss.com/echarts/4.2.0-rc.2/echarts.min.js")
 
+  //- 头部
   .header
     h1.title(style="font-size:3em;margin-bottom:4vh;")= title
-      .btn-group.dropdown(style="position:absolute;left:10px;")
-        button.btn.btn-danger.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 设备列表
-        .dropdown-menu
-          table.table.table-striped
-            tbody
-              tr
-                th #
-                th IP
-                th ID
-                th >
-            tbody.devicesList
-              .dropdown-item
+    buton.btn.btn-danger#deviceListQuery(type="button" data-toggle="modal" data-target = "#deviceListModal" style="margin-top:-100px;margin-left:15px") 设备列表
+    .modal.fade(id="deviceListModal" tabindex="-1" role="dialog" aria-labelledby="deviceListLabel" aria-hidden="true")
+      .modal-dialog.modal-dialog-centered(role="document")
+        .modal-content
+          .modal-header
+            h5.modal-title 设备列表
+          .modal-body
+            p#ppp 
+            table.table.table-borderless
+              thead
+                tr
+                  th #
+                  th IP
+                  th ID
+                  //- th ->
+              tbody.devicesList
+          .modal-footer
+          
+      //- .btn-group.dropdown(style="position:absolute;left:10px;") 11.18 21:27
+      //-   button.btn.btn-danger.dropdown-toggle(type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false") 设备列表
+      //-   .dropdown-menu
+      //-     table.table.table-striped
+      //-       tbody
+      //-         tr
+      //-           th #
+      //-           th IP
+      //-           th ID
+      //-           th >
+      //-       tbody.devicesList
+      //-         .dropdown-item
                   //- tr
                     td #{index}
                     td #{device.addr}
                     td #{device.id} 
                     td(style="overflow: hidden;") #{device.lastValue || '无'} 
+  //- 内容
   .container-fluid
     .row
+      //- 状态
       .col-md-4.col-sm-6
         .block
           img.block-img(src="/images/light.png", alt="")
           .content
             .text
-              p.title 灯一：
+              p.title ◡灯泡：
               p.light1(style='color:white') 未知
             .text
-              p.title 灯二：
-              p.light2(style='color:white') 未知
+              p.title ◡窗帘：
+              p.curtain1(style='color:white') 未知
             .text
-              p.title 灯三：
-              p.light3(style='color:white') 未知
+              p.title 继电器：
+              p.relay1(style='color:white') 未知
+      //- 温度信息
       .col-md-4.col-sm-6
         .block
           img.block-img(src="/images/temp.png", alt="")
@@ -53,6 +75,7 @@ block content
               p.title 平均：
               p.AvgTemp(style='color:white') 25 
               p(style='color:white') ℃
+      //- 湿度信息
       .col-md-4.col-sm-6
         .block
           img.block-img(src="/images/humi.png", alt="")
@@ -70,6 +93,7 @@ block content
               p.AvgHumi(style='color:white') 25 
               p(style='color:white') %rh
     .row
+      //- 相关控制
       .col-md-4.col-sm-6
         .block
           img.block-img(src="/images/option.png", alt="")
@@ -86,9 +110,11 @@ block content
               p.title ◡未知：
               button.btn.btn-success.btn-lg(type="button") 开启
               button.btn.btn-warning.btn-lg(type="button") 关闭
-      .col.md-8.col-sm-8
+      //- 实时温度 .
+      .col-md-8.col-sm-8
         div#tempEchartBox
     .row
+      //- 跳转
       .col-md-4.col-sm-6
         .block
           img.block-img(src="/images/jump.png", alt="")
@@ -100,9 +126,22 @@ block content
               p.title ------未完待续-------
             .text
               p.title ------未完待续-------
-      .col.md-8.col-sm-8
+      //- 实时湿度 .
+      .col-md-8.col-sm-8 
         div#humiEchartBox
+    .row
+      .col-md-4.col-sm-6
+        .block
+      //- 实时光照强度 .
+      .col-md-8.col-sm-8
+        div#rayEchartBox
       script(src="/javascripts/devIndex.js")
+    //- .row
+    //-   .col-md-6.col-sm-9
+    //-     .input-group
+    //-       span.input-group-addon#device-aria 设备ID：
+    //-       input.form-control#deviceId(type="text" aria-describedby="device-aria" value="sensor001")
+
     
 
 

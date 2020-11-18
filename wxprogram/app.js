@@ -1,11 +1,12 @@
 //app.js
+let debugging = true;
 App({
   onLaunch: function () {
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
-
+    wx.setStorageSync('logs', logs) 
+ 
     // 登录
     wx.login({
       success: res => {
@@ -24,9 +25,9 @@ App({
 
               // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
               // 所以此处加入 callback 以防止这种情况
-              if (this.userInfoReadyCallback) {
+              if (this.userInfoReadyCallback) { 
                 this.userInfoReadyCallback(res)
-              }
+              } 
             }
           })
         }
@@ -35,8 +36,10 @@ App({
   },
   globalData: {
     userInfo: null,
-    webSocketUrl: "ws://47.106.185.79:3000",
-    httpUrl: "http://47.106.185.79:3000",
+    // webSocketUrl: "ws://47.106.185.79:3000",
+    // httpUrl: "http://47.106.185.79:3000",
+    webSocketUrl: debugging ? "ws://127.0.0.1:3000" : "ws://47.106.185.79:3000",
+    httpUrl: debugging ?"http://127.0.0.1:3000" : "http://47.106.185.79:3000",
     deviceId: "sensor001"
   }
 })

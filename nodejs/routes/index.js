@@ -23,6 +23,11 @@ router.post("/led/:id", (req, res, next) => {
   tcpServer.sentCommand(req.params.id, req.body.action);
   res.send({ code: 0, msg: "command send" });
 });
+router.post("/relay/:id", (req, res, next) => {
+  console.log("--- post /relay/:id ", req.params.id, req.body);
+  tcpServer.sentCommand(req.params.id, req.body.action);
+  res.send({ code: 0, msg: "command send" });
+});
 // 查看设备状态
 router.post("/checkDevState/:id", (req, res, next) => {
   console.log("--- post /checkDevState/:id ", req.params.id, req.body);

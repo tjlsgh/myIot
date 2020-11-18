@@ -15,6 +15,8 @@ function myEchart() {
       setOptions(data.time, data.value.temp, chart, chartOption);
     } else if (type == "humi") {
       setOptions(data.time, data.value.humi, chart, chartOption);
+    } else if (type == "ray") {
+      setOptions(data.time, data.value.ray, chart, chartOption);
     }
   };
 

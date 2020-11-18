@@ -60,7 +60,6 @@ mongodb.find = function (data, callback) {
       });
   } else callback("--- mongodb is not connected");
 };
-mongodb.find24hoursData = function () {
-  
-};
+// mongodb.find24hoursData = function () {
+// };
 module.exports = mongodb;

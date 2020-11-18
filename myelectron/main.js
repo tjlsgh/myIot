@@ -19,10 +19,11 @@ function createWindow() {
 
   mainWindow.on("close", () => {
     mainWindow = null;
+    tcp_server.subscribeDevId = null;
   })
 
   // Open the DevTools.
-  //mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 }
 
 // This method will be called when Electron has finished

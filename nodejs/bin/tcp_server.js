@@ -56,12 +56,12 @@ var server = net.createServer((connection) => {
     console.log("--- 客户端关闭连接");
     deleteDevice(connection);
   });
-
+  // 关闭连接
   connection.on("close", () => {
     console.log("--- " + address, connection.id, "close");
     deleteDevice(connection);
   });
-
+  // 连接错误
   connection.on("error", () => {
     console.log("--- " + address, connection.id, "error");
     deleteDevice(connection);
@@ -75,14 +75,16 @@ var server = net.createServer((connection) => {
     deleteDevice(connection);
   });
 });
+// 监听
 server.listen(PORT, () => {
   console.log("--- server is listening");
 });
-
+// 添加设备
 function addDevice(connection) {
   deleteDevice(connection);
   devicesList.push(connection);
 }
+// 删除设备
 function deleteDevice(connection) {
   if (connection.id && connection.addr) {
     let cIndex = null;
@@ -96,6 +98,7 @@ function deleteDevice(connection) {
     }
   }
 }
+// 查找设备
 function findDevice(connection) {
   let newDevicesList = [];
   devicesList.forEach((element) => {
@@ -105,6 +108,7 @@ function findDevice(connection) {
   });
   return newDevicesList;
 }
+// 根据id查找设备
 function findDeviceById(id) {
   let newDevicesList = [];
   devicesList.forEach((element) => {
@@ -114,6 +118,7 @@ function findDeviceById(id) {
   });
   return newDevicesList;
 }
+// 发送命令
 function sendCommand(id, command) {
   let devices = findDeviceById(id);
   if (devices.length === 0) {

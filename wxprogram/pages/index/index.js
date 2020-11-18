@@ -6,6 +6,8 @@ let devData = 0,
 const reqCommand = {
   closeLed: "0",
   openLed: "1",
+  closeRelay: "4",
+  openRelay: "3",
   checkDevState: "2",
 };
 let option = {
@@ -17,7 +19,7 @@ let option = {
     trigger: 'axis'
   },
   legend: {
-    data: ['temp', 'humi']
+    data: ['temp', 'humi', 'ray']
   },
   grid: {
     left: '3%',
@@ -41,13 +43,14 @@ let option = {
     type: 'value'
   },
   series: [{
-      name: '温度',
+      name: '温度', 
       type: 'line',
       itemStyle : {
         normal : {
-            color:'#f5bf58',   // 设置最高气温线的颜色
+            color:'#f5bf58',   
         }
       },
+      smooth: true,
       data: []
     },
     {
@@ -55,9 +58,21 @@ let option = {
       type: 'line',
       itemStyle : {
         normal : {
-            color:'#fdfeff',   // 设置最高气温线的颜色
+            color:'#fdfeff',   
         }
       },
+      smooth: true,
+      data: []
+    },
+    {
+      name: '光强',
+      type: 'line',
+      itemStyle : {
+        normal : {
+            color:'#27ae60',   
+        }
+      },
+      smooth: true,
       data: []
     },
   ]
@@ -79,10 +94,12 @@ function drawLineChart(time, value) {
   option.xAxis.data.push(time);
   option.series[0].data.push(value.temp);
   option.series[1].data.push(value.humi);
+  option.series[2].data.push(value.ray);
   if (option.xAxis.data.length > 10) {
     option.xAxis.data.shift()
     option.series[0].data.shift()
     option.series[1].data.shift()
+    option.series[2].data.shift()
   }
   if (temphumichart) {
     temphumichart.setOption(option);
@@ -177,6 +194,38 @@ Page({
       }
     })
   },
+  // 开窗帘
+  relay_open: function () {
+    wx.request({
+      url: app.globalData.httpUrl + "/relay/" + app.globalData.deviceId,
+      method: "POST",
+      header: {
+        "content-type": "application/json" 
+      },
+      data: {
+        action: reqCommand.openRelay
+      },
+      success: (data) => {
+        console.log(data);
+      }
+    })
+  },
+  // 关窗帘
+  relay_close: function () {
+    wx.request({
+      url: app.globalData.httpUrl + "/relay/" + app.globalData.deviceId,
+      method: "POST",
+      header: {
+        "content-type": "application/json" 
+      },
+      data: {
+        action: reqCommand.closeRelay
+      },
+      success: (data) => {
+        console.log(data);
+      }
+    })
+  },
   changeDeviceId: function(value) {
     //console.log(value);
     app.globalData.deviceId = value.detail.value;
@@ -210,4 +259,4 @@ Page({
       console.log("--- closeSocket error")
     }
   }
-})
+}) 

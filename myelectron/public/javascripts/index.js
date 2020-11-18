@@ -2,7 +2,7 @@
 /* 我是分界线 */
 const { ipcRenderer } = nodeRequire("electron");
 const myEchart = require("./myEchart.js").myEchart;
-let tempChart, humiChart;
+let tempChart, humiChart, rayChart;
 let devData = 0,
   devState = 1; // 标识状态、数据
 let mec = new myEchart();
@@ -19,13 +19,16 @@ let dataEleClass = [
 let reqCommand = {
   closeLed: "0",
   openLed: "1",
+  closeRelay: "4",
+  openRelay: "3",
   checkDevState: "2",
 };
 // 初始化
 tempChart = mec.init(tempChart, "tempEchartBox");
 humiChart = mec.init(humiChart, "humiEchartBox");
-// 发送设备id
-subscribeDev($("#deviceId").val());
+rayChart = mec.init(rayChart, "rayEchartBox");
+// 订阅默认设备Id
+subscribeDev("sensor001");
 
 // 监听设备数据事件
 ipcRenderer.on("deviceData", (event, arg) => {
@@ -38,6 +41,7 @@ ipcRenderer.on("deviceData", (event, arg) => {
       // console.log("drawing...")
       mec.drawLineChart(data, tempChart, tempChartOption, "temp");
       mec.drawLineChart(data, humiChart, humiChartOption, "humi");
+      mec.drawLineChart(data, rayChart, rayChartOption, "ray")
       setMinMaxAvg(data.value);
     } else if (data.value.type === devState) {
       console.log("--- stateHandle......");
@@ -66,7 +70,14 @@ $("#led-close").on("click", () => {
   let deviceId = $("#deviceId").val();
   sendCommand(deviceId, reqCommand.closeLed);
 });
-
+$("#relay-open").click(() => {
+  let deviceId = $("#deviceId").val();
+  sendCommand(deviceId, reqCommand.openRelay);
+});
+$("#relay-close").click(() => {
+  let deviceId = $("#deviceId").val();
+  sendCommand(deviceId, reqCommand.closeRelay);
+});
 // 监听设备ID
 $("#deviceId").on("change",() => {
   //console.log($("#devieId").val());
@@ -90,6 +101,9 @@ function setDevState(devices) {
       setDevStateHelper(key, devices);
     }
     if (key == "relay1") {
+      setDevStateHelper(key, devices);
+    }
+    if (key == "curtain1") {
       setDevStateHelper(key, devices);
     }
   }
@@ -145,6 +159,13 @@ const tempChartOption = {
   yAxis: {
     type: "value",
   },
+  tooltip: {
+    trigger: 'axis'
+  },
+  toolbox: {
+    show: true,
+    trigger: 'axis',
+  },
   series: [
     {
       data: [],
@@ -173,6 +194,13 @@ const humiChartOption = {
   yAxis: {
     type: "value",
   },
+  tooltip: {
+    trigger: 'axis'
+  },
+  toolbox: {
+    show: true,
+    trigger: 'axis',
+  },
   series: [
     {
       data: [],
@@ -182,6 +210,42 @@ const humiChartOption = {
   ],
   title: {
     text: "实时湿度",
+    left: "center",
+    textStyle: {
+      color: "#eaaead",
+    },
+  },
+  textStyle: {
+    color: "#fff",
+    fontWeight: "normal",
+    fontSize: 20,
+  },
+};
+const rayChartOption = {
+  xAxis: {
+    type: "category",
+    data: [],
+  },
+  yAxis: {
+    type: "value",
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  toolbox: {
+    show: true,
+    trigger: 'axis',
+  },
+  series: [
+    {
+      name: "光照强度",
+      data: [],
+      type: "line",
+      smooth: true,
+    },
+  ],
+  title: {
+    text: "实时光照强度",
     left: "center",
     textStyle: {
       color: "#eaaead",
@@ -214,6 +278,8 @@ function myEchart() {
       setOptions(data.time, data.value.temp, chart, chartOption);
     } else if (type == "humi") {
       setOptions(data.time, data.value.humi, chart, chartOption);
+    } else if (type == "ray") {
+      setOptions(data.time, data.value.ray, chart, chartOption);
     }
   };
 

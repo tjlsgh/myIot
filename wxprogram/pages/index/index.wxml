@@ -4,11 +4,15 @@
   <view style="text-align: center; font-size:24px"><text style="color:white">MyIotSys</text></view>
   <view class="container" style='height:200px;margin-top:5vh;'>
     <!-- <ec-canvas force-use-old-canvas="true" id="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas> -->
-    <ec-canvas id="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas>
+    <ec-canvas force-use-old-canvas="true" id="mychart-dom-bar" canvas-id="mychart-bar" ec="{{ ec }}"></ec-canvas>
   </view>
   <view style="display:flex; margin-top: 10px">
     <button type="primary" bindtap="led_open">开灯</button>
     <button type="warn" bindtap="led_close">关灯</button>
+  </view> 
+  <view style="display:flex; margin-top: 30px">
+    <button type="primary" bindtap="relay_open">开窗帘</button>
+    <button type="warn" bindtap="relay_close">关窗帘</button>
   </view> 
   <view style="display: flex; margin-top: 20px">
     <input value="{{deviceId}}" confirm-type="done" bindconfirm="changeDeviceId" style='border:1px solid #ccc; padding-bottom : 0px' placeholder='默认设备：sensor001' />

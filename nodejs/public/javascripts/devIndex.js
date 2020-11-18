@@ -1,12 +1,13 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 
 /* 我是分界线 */
+
 // 浏览器不识别require  需要安装 npm install -g browserify   通过browserify打包模块 browserify devIndex.js -o myDevIndex.js
 //const MyEchart = require("./echartInit.js");
 //const Mywebsocket = require("./webSocketInit.js");
 const mywebsocket = require("./myWebsocket").myWebSocket;
 const myEchart = require("./myEchart").myEchart;
-var tempChart, humiChart;
+var tempChart, humiChart, rayChart;
 const host = window.location.host;
 const deviceId = window.location.pathname.split("/")[2] || "sensor001";
 let devicesList = [];
@@ -25,6 +26,8 @@ let dataEleClass = [
 const reqCommand = {
   closeLed: "0",
   openLed: "1",
+  closeRelay: "4",
+  openRelay: "3",
   checkDevState: "2",
 };
 
@@ -41,14 +44,10 @@ window.onload = function () {
   mec = new myEchart();
   tempChart = mec.init(tempChart, "tempEchartBox");
   humiChart = mec.init(tempChart, "humiEchartBox");
+  rayChart = mec.init(rayChart, "rayEchartBox");
   console.log("--- my chart init");
+  initDevClick();
 };
-window.addEventListener("beforeunload", function (event) {
-  console.log("--- I am the 2nd one.");
-});
-window.addEventListener("unload", function (event) {
-  console.log("--- I am the 4th and last one");
-});
 
 // 解析websocket收到的数据类型
 function msgHandle(msg) {
@@ -57,6 +56,7 @@ function msgHandle(msg) {
     if (e.value.type === devData) {
       mec.drawLineChart(e, tempChart, tempChartOption, "temp");
       mec.drawLineChart(e, humiChart, humiChartOption, "humi");
+      mec.drawLineChart(e, rayChart, rayChartOption, "ray");
       setMinMaxAvg(e.value);
     } else if (e.value.type === devState) {
       console.log("--- stateHandle......");
@@ -79,9 +79,12 @@ function setDevState(devices) {
     if (key == "relay1") {
       setDevStateHelper(key, devices);
     }
+    if (key == "curtain1") {
+      setDevStateHelper(key, devices);
+    }
   }
 }
-// 好蠢的写法呀 QAQ
+// QAQ
 function setMinMaxAvg(value) {
   if (MinMaxAvgData.length == 0) {
     console.log("--- init minmaxavgdata");
@@ -138,13 +141,44 @@ $("#led-close").click(() => {
   $.post("/led/" + deviceId, { action: reqCommand.closeLed });
   console.log("--- send: led close");
 });
+$("#relay-open").click(() => {
+  $.post("/relay/" + deviceId, { action: reqCommand.openRelay });
+  console.log("--- send: relay open");
+});
+$("#relay-close").click(() => {
+  $.post("/relay/" + deviceId, { action: reqCommand.closeRelay });
+  console.log("--- send: relay close");
+});
+$("#deviceListModal").on("show.bs.modal", (e)=> {
+  // $.get("/devicesList", (res) => {
+  //   devicesList = res;
+  //   // console.log(devicesList);
+  // })
+  $.ajax({
+    url: "/devicesList",
+    type: "get",
+    async: false,
+    success: (res) => {
+      devicesList = res;
+      console.log('1111');
+    }
+  })
+  let html = "";
+  devicesList.forEach((device, index) => {
+    let id = device.id;
+    html += '<tr><td>'+index+'</td><td>'+device.addr+
+    '</td><td><button  class="btn btn-dark" id='+id+'>'+device.id+'</button></td></tr>';
+  })
+  $(".devicesList").html(html);
+  initDevClick();
+})
 // 跳转到历史数据页面
 $("#to-historyIndex").click(() => {
   if (window.location.href.split("/")[4] == undefined)
     window.location.href = window.location.href + "history/" + deviceId;
   else window.location.href = window.location.href.replace("device", "history");
 });
-// 显示连接设备列表
+/* // 显示连接设备列表
 $(".dropdown").on("show.bs.dropdown", ()=> {
   // 发送获取连接设备的请求并渲染出来
   $.get("/devicesList", (res) => {
@@ -162,7 +196,8 @@ $(".dropdown").on("show.bs.dropdown", ()=> {
    
   });
   initDevClick();
-})
+}) */
+
 // 点击设备列表后初始化点击按钮
 function initDevClick() {
   // 跳转到某一设备页面
@@ -187,6 +222,7 @@ function initDevClick() {
     });
   }
 }
+
 
 var tempChartOption = {
   xAxis: {
@@ -260,6 +296,42 @@ var humiChartOption = {
     fontSize: 20,
   },
 };
+var rayChartOption = {
+  xAxis: {
+    type: "category",
+    data: [],
+  },
+  yAxis: {
+    type: "value",
+  },
+  tooltip: {
+    trigger: 'axis'
+  },
+  toolbox: {
+    show: true,
+    trigger: 'axis',
+  },
+  series: [
+    {
+      name: "光照强度",
+      data: [],
+      type: "line",
+      smooth: true,
+    },
+  ],
+  title: {
+    text: "实时光照强度",
+    left: "center",
+    textStyle: {
+      color: "#eaaead",
+    },
+  },
+  textStyle: {
+    color: "#fff",
+    fontWeight: "normal",
+    fontSize: 20,
+  },
+};
 /* 我是分界线 */
 
 
@@ -281,6 +353,8 @@ function myEchart() {
       setOptions(data.time, data.value.temp, chart, chartOption);
     } else if (type == "humi") {
       setOptions(data.time, data.value.humi, chart, chartOption);
+    } else if (type == "ray") {
+      setOptions(data.time, data.value.ray, chart, chartOption);
     }
   };
 

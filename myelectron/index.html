@@ -21,22 +21,22 @@
   <body>
     <div class="container-fluid">
       <div class="row">
-        <!-- 灯泡状态 -->
+        <!-- 状态 -->
         <div class="col-md-4 col-sm-6">
           <div class="block">
             <img class="block-img" src="./public/images/light.png" alt="" />
             <div class="content">
               <div class="text">
-                <p class="title">灯一：</p>
+                <p class="title">◡灯泡：</p>
                 <p class="light1" style="color: white">未知</p>
               </div>
               <div class="text">
-                <p class="title">灯二：</p>
-                <p id="light2" style="color: white">未知</p>
+                <p class="title">◡窗帘：</p>
+                <p class="curtain1" style="color: white">未知</p>
               </div>
               <div class="text">
-                <p class="title">灯三：</p>
-                <p id="light3" style="color: white">未知</p>
+                <p class="title">继电器：</p>
+                <p class="relay1" style="color: white">未知</p>
               </div>
             </div>
           </div>
@@ -85,6 +85,13 @@
                 <p style="color: white">%rh</p>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <!-- 实时温度 -->
+        <div class="col-md-8 col-sm-12">
+          <div id="tempEchartBox">
           </div>
         </div>
         <!-- 相关控制 -->
@@ -137,18 +144,13 @@
             </div>
           </div>
         </div>
-        <!-- 实时温度 -->
-        <div class="col-md-8 col-sm-12">
-          <div
-            id="tempEchartBox"
-            style="
-              width: 100%;
-              height: 30vh;
-              background-color: rgba(25, 118, 210, 0.3);">
-          </div>
-        </div>
       </div>
       <div class="row">
+        <!-- 实时湿度 -->
+        <div class="col-md-8 col-sm-12">
+          <div id="humiEchartBox">
+          </div>
+        </div>
         <!-- 页面跳转 -->
         <div class="col-md-4 col-sm-6">
           <div class="block">
@@ -172,48 +174,54 @@
             </div>
           </div>
         </div>
-        <!-- 实时湿度 -->
-        <div class="col-md-8 col-sm-12">
-          <div
-           id="humiEchartBox"
-            style="
-            width: 100%;
-            height: 30vh;
-            background-color: rgba(25, 118, 210, 0.3);">
-          </div>
-        </div>
           <!-- 订阅设备 -->
-        <div
-          class="col-md-6 col-sm-9"
-          style="position: absolute; bottom: 5px; right: 5px">
-          <div class="input-group">
-            <span class="input-group-addon" id="device-aria">设备ID：</span>
-            <input
-              type="text"
-              class="form-control"
-              id="deviceId"
-              aria-describedby="device-aria"
-              value="mydevice1"/>
-          </div>
+      </div>
+      <div class="row">
+        <!-- 实时光照强度 -->
+        <div class="col-md-8 col-sm-12">
+          <div id="rayEchartBox"></div>
+        </div>
+        <div class="col-md-4 col-sm-6">
+          <div class="block"></div>
         </div>
       </div>
       <div class="row">
-        <!-- 订阅设备 -->
-        <!-- <div
-          class="col-md-6 col-sm-9"
-          style="position: absolute; bottom: 5px; right: 5px">
+        <div class="col-md-6 col-sm-9" style="position: relative; bottom: 5px;">
           <div class="input-group">
-            <span class="input-group-addon" id="device-aria">设备ID：</span>
-            <input
-              type="text"
-              class="form-control"
-              id="deviceId"
-              aria-describedby="device-aria"
-              value="mydevice1"/>
+          <span class="input-group-addon" id="device-aria">设备ID：</span>
+          <input
+            type="text"
+            class="form-control"
+            id="deviceId"
+            aria-describedby="device-aria"
+            value="sensor001"/>
           </div>
-        </div> -->
+        </div>
+        <!-- 设备列表 -->
+        <!-- <button class="btn btn-warning" type="button" data-togggle="model" data-target = "#deviceList">设备列表</button> -->
       </div>
-      <script src="./public/javascripts/index.js"></script>
     </div>
+  </div>
+  <!-- 弹出模态框 -->
+  <!-- <div class="modal fade" id="deviceList" tabindex="-1" role="dialog" aria-labelledby="deviceListLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalCenterTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>saodfasdfasdfsd</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div> -->
+  <script src="./public/javascripts/index.js"></script>
   </body>
 </html>
