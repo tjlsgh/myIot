@@ -7,5 +7,14 @@
 
 ## 硬件实物图片
 ![image](https://user-images.githubusercontent.com/63591834/110636466-3fa2e280-81e7-11eb-82ce-043ccc79e03e.png)
+![image](https://user-images.githubusercontent.com/63591834/110636819-afb16880-81e7-11eb-89ca-c0ee41e33378.png)
+![image](https://user-images.githubusercontent.com/63591834/110636840-b3dd8600-81e7-11eb-8627-42192a441f97.png)
 
 ## 软件主界面
+### 网页主界面
+![image](https://user-images.githubusercontent.com/63591834/110638632-c1940b00-81e9-11eb-9561-5d6e4046f121.png)
+![image](https://user-images.githubusercontent.com/63591834/110638648-c5c02880-81e9-11eb-8bf4-74208a4a7e3e.png)
+### 桌面应用
+![image](https://user-images.githubusercontent.com/63591834/110638610-b8a33980-81e9-11eb-846c-7569accfbd2e.png)
+### 微信小程序
+![image](https://user-images.githubusercontent.com/63591834/110638665-cb1d7300-81e9-11eb-8082-2333e19be22d.png)
