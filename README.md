@@ -5,7 +5,9 @@
 * 用户可通过网页或者微信小程序查看实时的温湿度和光照强度也可查看最近的二十条历史记录。同时，用户也可以向开发板发送控制命令来控制继电器和灯泡。
 * 除此之外，当光照强度过高或者过低时，继电器会自动开或者关。继电器可与电机相连，这样就可以通过控制继电器的开关来控制窗帘。
 
-## 硬件实物图片
+## 硬件
+* 开发板采用nodemcu，传感器有dht11温湿度传感器、光敏传感器，继电器是1路5V的。
+## 实物图
 ![image](https://user-images.githubusercontent.com/63591834/110636466-3fa2e280-81e7-11eb-82ce-043ccc79e03e.png)
 ![image](https://user-images.githubusercontent.com/63591834/110636819-afb16880-81e7-11eb-89ca-c0ee41e33378.png)
 ![image](https://user-images.githubusercontent.com/63591834/110636840-b3dd8600-81e7-11eb-8627-42192a441f97.png)
