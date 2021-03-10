@@ -17,4 +17,5 @@
 ### 桌面应用
 ![image](https://user-images.githubusercontent.com/63591834/110638610-b8a33980-81e9-11eb-846c-7569accfbd2e.png)
 ### 微信小程序
-![image](https://user-images.githubusercontent.com/63591834/110638665-cb1d7300-81e9-11eb-8082-2333e19be22d.png)
+![image](https://user-images.githubusercontent.com/63591834/110638887-07e96a00-81ea-11eb-8d23-2910df9a6d8d.png)
+
