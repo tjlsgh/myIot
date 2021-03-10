@@ -25,10 +25,10 @@
 ![image](https://user-images.githubusercontent.com/63591834/110638887-07e96a00-81ea-11eb-8d23-2910df9a6d8d.png)
 
 ## 技术栈
-web 开发相关：HTML、CSS、JS
-服务器开发相关：nodejs、linux，mongodb 基础
-硬件开发相关：C 语言、嵌入式开发技能
-桌面应用相关：electron基础
-微信小程序相关：小程序开发基础
+* web 开发相关：HTML、CSS、JS
+* 服务器开发相关：nodejs、linux，mongodb 基础
+* 硬件开发相关：C 语言、嵌入式开发技能
+* 桌面应用相关：electron基础
+* 微信小程序相关：小程序开发基础
 
 
